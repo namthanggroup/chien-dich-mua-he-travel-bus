@@ -1046,12 +1046,14 @@ document.getElementById('checkinForm').addEventListener('submit', async (e) => {
       route:    document.referrer || 'Direct QR'
     };
 
-    const res = await fetch(SHEET_URL, {
+    // Google Apps Script yêu cầu no-cors — không đọc được response body
+    // nên coi như thành công ngay sau khi fetch không throw
+    await fetch(SHEET_URL, {
       method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(payload)
     });
-
-    if (!res.ok) throw new Error('Server error');
 
     // Success!
     launchConfetti();
