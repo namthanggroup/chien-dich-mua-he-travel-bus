@@ -877,12 +877,12 @@ function startAppRedirect() {
   // Bắt đầu đếm ngược redirect
   _redirectTimer = setTimeout(() => {
     window.location.href = _appLink;
-  }, 2500);
+  }, 5000);
   // Hiện nút fallback sau 3.5s phòng trường hợp bị chặn
   setTimeout(() => {
     const fb = document.getElementById('fallbackBtn');
     if (fb) fb.style.display = 'flex';
-  }, 3500);
+  }, 6000);
 }
 
 // Fallback button handler
