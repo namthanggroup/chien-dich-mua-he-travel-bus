@@ -1573,14 +1573,19 @@ const popupCta   = document.getElementById('popupCta');
 
 setTimeout(() => { popup.style.display = 'flex'; }, 800);
 
-function closePopup() { popup.classList.add('hide'); }
+function closePopup() {
+  popup.style.opacity = '0';
+  popup.style.transition = 'opacity 0.25s ease';
+  setTimeout(() => { popup.style.display = 'none'; }, 250);
+}
 popupClose.addEventListener('click', closePopup);
 popup.addEventListener('click', (e) => { if (e.target === popup) closePopup(); });
 popupCta.addEventListener('click', (e) => {
-  e.preventDefault(); closePopup();
+  e.preventDefault();
+  closePopup();
   setTimeout(() => {
     document.getElementById('checkin').scrollIntoView({ behavior: 'smooth' });
-  }, 200);
+  }, 300);
 });
 
 // ─── NAVBAR SCROLL ─────────────────────────────────────────────────────────
