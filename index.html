@@ -2,1003 +2,1611 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Check-in & Nhận Magic Ticket | Nam Thắng Travel Bus</title>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hè Thảnh Thơi – Nam Thắng Travel Bus</title>
+
+<!-- Google Fonts fallback (Myriad Pro & UTM Aptima are local fonts) -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
 <style>
-  :root {
-    --lime: #AEEA00;
-    --lime-dark: #7CB800;
-    --lime-light: #DEFF7A;
-    --lime-pale: #F4FFD0;
-    --green: #1B5E20;
-    --green-mid: #2E7D32;
-    --white: #FFFFFF;
-    --gray: #F5F5F5;
-    --text: #1a1a1a;
-    --text-muted: #666;
-    --orange: #FF6F00;
-    --radius: 18px;
-    --radius-sm: 10px;
-  }
+/* ═══════════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════════ */
+:root {
+  --brand:        #8BC34A;
+  --brand-dark:   #558B2F;
+  --brand-light:  #C5E1A5;
+  --brand-pale:   #F1F8E9;
+  --accent:       #E53935;
+  --accent-warm:  #FF6F00;
+  --white:        #FFFFFF;
+  --off-white:    #FAFAF7;
+  --text:         #1C2B0E;
+  --text-mid:     #4A5568;
+  --text-light:   #718096;
+  --gold:         #F9A825;
+  --shadow:       0 4px 24px rgba(139,195,74,0.15);
+  --shadow-lg:    0 16px 56px rgba(0,0,0,0.14);
+  --r:            16px;
+  --r-sm:         10px;
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* Font stack — Myriad Pro fallback to Montserrat */
+  --font-main:    'Myriad Pro', 'Montserrat', sans-serif;
+  --font-sub:     'UTM Aptima', 'Lato', sans-serif;
+}
 
-  body {
-    font-family: 'Nunito', sans-serif;
-    background: #0d1f0d;
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
-  }
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* === ANIMATED BACKGROUND === */
-  .bg-layer {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    overflow: hidden;
-  }
-  .bg-layer::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at 20% 0%, #1a3d0a 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 100%, #0f2d05 0%, transparent 60%),
-                linear-gradient(160deg, #0d1f0d 0%, #0a1a08 100%);
-  }
+html { scroll-behavior: smooth; }
 
-  .blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(60px);
-    opacity: 0.25;
-    animation: blobFloat 8s ease-in-out infinite;
-  }
-  .blob-1 { width: 300px; height: 300px; background: #AEEA00; top: -80px; left: -60px; animation-delay: 0s; }
-  .blob-2 { width: 200px; height: 200px; background: #76FF03; top: 40%; right: -50px; animation-delay: -3s; }
-  .blob-3 { width: 150px; height: 150px; background: #CCFF90; bottom: 10%; left: 10%; animation-delay: -5s; }
+body {
+  font-family: var(--font-sub);
+  background: var(--off-white);
+  color: var(--text);
+  overflow-x: hidden;
+}
 
-  @keyframes blobFloat {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(15px, -20px) scale(1.05); }
-    66% { transform: translate(-10px, 10px) scale(0.95); }
-  }
+/* ═══════════════════════════════════════════════
+   TYPOGRAPHY
+═══════════════════════════════════════════════ */
+h1,h2,h3,h4 { font-family: var(--font-main); line-height: 1.18; }
+.section-title {
+  font-family: var(--font-main);
+  font-size: clamp(22px, 5vw, 36px);
+  font-weight: 900;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.section-title span { color: var(--brand-dark); }
+.section-label {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--brand-dark);
+  background: var(--brand-pale);
+  border: 1px solid var(--brand-light);
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
 
-  /* Floating particles */
-  .particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-  .particle {
-    position: absolute;
-    width: 4px; height: 4px;
-    background: var(--lime);
-    border-radius: 50%;
-    opacity: 0;
-    animation: particleRise linear infinite;
-  }
-  @keyframes particleRise {
-    0% { opacity: 0; transform: translateY(0) scale(0); }
-    10% { opacity: 0.6; }
-    90% { opacity: 0.2; }
-    100% { opacity: 0; transform: translateY(-100vh) scale(0.3); }
-  }
+/* ═══════════════════════════════════════════════
+   UTILITIES
+═══════════════════════════════════════════════ */
+.container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+.container-sm { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-family: var(--font-main);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), #c62828);
+  color: white;
+  box-shadow: 0 4px 18px rgba(229,57,53,0.35);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(229,57,53,0.45); }
+.btn-secondary {
+  background: transparent;
+  color: var(--brand-dark);
+  border: 2px solid var(--brand);
+}
+.btn-secondary:hover { background: var(--brand); color: white; }
+.btn-brand {
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+  color: white;
+  box-shadow: 0 4px 18px rgba(139,195,74,0.35);
+}
+.btn-brand:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(139,195,74,0.45); }
 
-  /* === MAIN CONTAINER === */
-  .container {
-    position: relative;
-    z-index: 1;
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 0 0 40px;
-  }
+/* Reveal on scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
 
-  /* === HEADER === */
-  .header {
-    text-align: center;
-    padding: 36px 24px 28px;
-    position: relative;
-  }
+/* ═══════════════════════════════════════════════
+   POPUP
+═══════════════════════════════════════════════ */
+.popup-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.72);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+.popup-overlay.hide { display: none; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-  .logo-wrap {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(174,234,0,0.12);
-    border: 1px solid rgba(174,234,0,0.3);
-    border-radius: 50px;
-    padding: 8px 18px;
-    margin-bottom: 20px;
-  }
-  .logo-dot {
-    width: 10px; height: 10px;
-    background: var(--lime);
-    border-radius: 50%;
-    animation: pulse 2s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(174,234,0,0.4); }
-    50% { transform: scale(1.2); box-shadow: 0 0 0 8px rgba(174,234,0,0); }
-  }
-  .logo-text {
-    font-family: 'Baloo 2', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--lime);
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-  }
+.popup-box {
+  background: var(--white);
+  border-radius: 24px;
+  max-width: 420px;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.3);
+  animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  position: relative;
+}
+@keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-  .header-badge {
-    display: inline-block;
-    background: linear-gradient(135deg, var(--orange), #FF8F00);
-    color: white;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    padding: 5px 14px;
-    border-radius: 20px;
-    margin-bottom: 16px;
-    animation: shimmer 3s ease-in-out infinite;
-  }
-  @keyframes shimmer {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(255,111,0,0.3); }
-    50% { box-shadow: 0 0 20px 4px rgba(255,111,0,0.5); }
-  }
+.popup-top {
+  background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand) 100%);
+  padding: 28px 24px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.popup-top::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.popup-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+.popup-title {
+  font-family: var(--font-main);
+  font-size: 20px;
+  font-weight: 900;
+  color: white;
+  text-transform: uppercase;
+  line-height: 1.25;
+  margin-bottom: 16px;
+  position: relative;
+}
+.popup-cards {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  position: relative;
+}
+.popup-card {
+  flex: 1;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 12px;
+  padding: 14px 10px;
+  text-align: center;
+}
+.popup-card-icon { font-size: 26px; margin-bottom: 6px; }
+.popup-card-type { font-size: 11px; color: rgba(255,255,255,0.75); margin-bottom: 4px; font-weight: 600; }
+.popup-card-val {
+  font-family: var(--font-main);
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--gold);
+}
+.popup-card-unit { font-size: 11px; color: rgba(255,255,255,0.7); }
 
-  .header h1 {
-    font-family: 'Baloo 2', sans-serif;
-    font-size: clamp(28px, 8vw, 36px);
-    font-weight: 800;
-    line-height: 1.15;
-    color: var(--white);
-    margin-bottom: 12px;
-  }
-  .header h1 span {
-    color: var(--lime);
-    display: block;
-    font-size: clamp(32px, 9vw, 42px);
-  }
+.popup-bottom { padding: 20px 24px 24px; text-align: center; }
+.popup-note { font-size: 12px; color: var(--text-light); margin-bottom: 16px; line-height: 1.5; }
+.popup-cta { width: 100%; padding: 16px; font-size: 15px; border-radius: 12px; }
+.popup-close {
+  position: absolute; top: 12px; right: 14px;
+  width: 28px; height: 28px;
+  background: rgba(255,255,255,0.2);
+  border: none; border-radius: 50%; cursor: pointer;
+  color: white; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+}
+.popup-close:hover { background: rgba(255,255,255,0.35); }
 
-  .header-sub {
-    font-size: 14px;
-    color: rgba(255,255,255,0.65);
-    line-height: 1.6;
-    max-width: 300px;
-    margin: 0 auto 24px;
-  }
+/* ═══════════════════════════════════════════════
+   STICKY BAR
+═══════════════════════════════════════════════ */
+.sticky-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 900;
+  background: var(--white);
+  border-top: 2px solid var(--brand-light);
+  display: flex;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+}
+.sticky-btn {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 14px 10px;
+  text-decoration: none;
+  font-family: var(--font-main);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+.sticky-btn-call {
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+  color: white;
+  border-right: 1px solid rgba(255,255,255,0.2);
+}
+.sticky-btn-call:hover { filter: brightness(1.1); }
+.sticky-btn-zalo {
+  background: #0068FF;
+  color: white;
+}
+.sticky-btn-zalo:hover { filter: brightness(1.1); }
+.sticky-icon { font-size: 18px; }
 
-  /* Steps bar */
-  .steps-bar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0;
-    padding: 0 24px;
-    margin-bottom: 8px;
-  }
-  .step-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    flex: 1;
-  }
-  /* Step circle — base */
-  .step-circle {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: rgba(174,234,0,0.08);
-    border: 2px solid rgba(174,234,0,0.25);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Baloo 2', sans-serif;
-    font-weight: 800;
-    font-size: 14px;
-    color: rgba(255,255,255,0.3);
-    transition: all 0.45s cubic-bezier(0.34,1.56,0.64,1);
-    position: relative;
-  }
-  /* Active: pulse ring */
-  .step-circle.active {
-    background: var(--lime);
-    border-color: var(--lime);
-    color: var(--green);
-    box-shadow: 0 0 0 0 rgba(174,234,0,0.55);
-    animation: stepPulse 2s ease-out infinite;
-  }
-  @keyframes stepPulse {
-    0%   { box-shadow: 0 0 0 0   rgba(174,234,0,0.55); }
-    60%  { box-shadow: 0 0 0 10px rgba(174,234,0,0); }
-    100% { box-shadow: 0 0 0 0   rgba(174,234,0,0); }
-  }
-  /* Done: checkmark pop */
-  .step-circle.done {
-    background: rgba(174,234,0,0.18);
-    border-color: var(--lime);
-    color: var(--lime);
-    box-shadow: 0 0 12px rgba(174,234,0,0.3);
-    animation: stepDonePop 0.4s cubic-bezier(0.34,1.56,0.64,1);
-  }
-  @keyframes stepDonePop {
-    0%   { transform: scale(0.7); opacity: 0.5; }
-    100% { transform: scale(1);   opacity: 1; }
-  }
-  .step-label {
-    font-size: 10px;
-    font-weight: 600;
-    color: rgba(255,255,255,0.3);
-    text-align: center;
-    letter-spacing: 0.3px;
-    transition: color 0.3s;
-  }
-  .step-label.active {
-    color: var(--lime);
-    text-shadow: 0 0 8px rgba(174,234,0,0.5);
-  }
-  .step-label.done { color: rgba(174,234,0,0.7); }
-  /* Connector — fill animation */
-  .step-connector {
-    height: 2px;
-    flex: 1;
-    background: rgba(174,234,0,0.12);
-    margin-bottom: 22px;
-    position: relative;
-    overflow: hidden;
-    border-radius: 2px;
-  }
-  .step-connector::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, var(--lime-dark), var(--lime));
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.6s cubic-bezier(0.65,0,0.35,1);
-    border-radius: 2px;
-  }
-  .step-connector.done::after { transform: scaleX(1); }
+/* ═══════════════════════════════════════════════
+   NAVBAR
+═══════════════════════════════════════════════ */
+.navbar {
+  position: sticky; top: 0; z-index: 800;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(139,195,74,0.2);
+  padding: 12px 0;
+  transition: box-shadow 0.3s;
+}
+.navbar.scrolled { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+.navbar-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none;
+}
+.nav-logo-icon {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+}
+.nav-logo-text {
+  font-family: var(--font-main);
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--text);
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+.nav-logo-text span { color: var(--brand-dark); display: block; font-size: 10px; letter-spacing: 1px; }
+.nav-actions { display: flex; align-items: center; gap: 10px; }
+.nav-actions .btn { padding: 10px 18px; font-size: 12px; }
 
-  /* === INFO CARDS === */
-  .info-cards {
-    display: flex;
-    gap: 10px;
-    padding: 16px 20px 0;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .info-cards::-webkit-scrollbar { display: none; }
+/* ═══════════════════════════════════════════════
+   SECTION 1 — HERO
+═══════════════════════════════════════════════ */
+.hero {
+  background: linear-gradient(160deg, #1a3a08 0%, #2d5a12 40%, #3d7a18 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 60px 0 80px;
+  min-height: 520px;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 10% 50%, rgba(139,195,74,0.15) 0%, transparent 55%),
+    radial-gradient(ellipse at 90% 20%, rgba(249,168,37,0.1) 0%, transparent 50%);
+}
+/* Diagonal cut bottom */
+.hero::after {
+  content: '';
+  position: absolute; bottom: -2px; left: 0; right: 0;
+  height: 60px;
+  background: var(--off-white);
+  clip-path: ellipse(55% 100% at 50% 100%);
+}
 
-  /* Staggered fade-in on load */
-  .info-card {
-    min-width: 140px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(174,234,0,0.15);
-    border-radius: 14px;
-    padding: 14px;
-    flex-shrink: 0;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-    animation: cardFadeIn 0.5s both;
-  }
-  .info-card:nth-child(1) { animation-delay: 0.1s; }
-  .info-card:nth-child(2) { animation-delay: 0.22s; }
-  .info-card:nth-child(3) { animation-delay: 0.34s; }
-  .info-card:nth-child(4) { animation-delay: 0.46s; }
-  @keyframes cardFadeIn {
-    from { opacity: 0; transform: translateY(14px) scale(0.95); }
-    to   { opacity: 1; transform: translateY(0)    scale(1); }
-  }
-  /* Shimmer sweep */
-  .info-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: -100%;
-    width: 60%; height: 100%;
-    background: linear-gradient(105deg,
-      transparent 30%,
-      rgba(174,234,0,0.08) 50%,
-      transparent 70%);
-    animation: cardShimmer 3.5s ease-in-out infinite;
-    pointer-events: none;
-  }
-  .info-card:nth-child(2)::before { animation-delay: 0.8s; }
-  .info-card:nth-child(3)::before { animation-delay: 1.6s; }
-  .info-card:nth-child(4)::before { animation-delay: 2.4s; }
-  @keyframes cardShimmer {
-    0%   { left: -100%; }
-    40%  { left: 160%; }
-    100% { left: 160%; }
-  }
-  /* Hover */
-  .info-card:active {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 8px 24px rgba(174,234,0,0.15);
-    border-color: rgba(174,234,0,0.4);
-  }
-  /* Icon bounce */
-  .info-card-icon {
-    font-size: 22px;
-    margin-bottom: 8px;
-    display: inline-block;
-    animation: iconBounce 3s ease-in-out infinite;
-  }
-  .info-card:nth-child(2) .info-card-icon { animation-delay: 0.4s; }
-  .info-card:nth-child(3) .info-card-icon { animation-delay: 0.8s; }
-  .info-card:nth-child(4) .info-card-icon { animation-delay: 1.2s; }
-  @keyframes iconBounce {
-    0%, 100% { transform: translateY(0); }
-    45%      { transform: translateY(-4px); }
-    55%      { transform: translateY(-4px); }
-  }
-  .info-card-title {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--lime);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
-  }
-  .info-card-desc {
-    font-size: 12px;
-    color: rgba(255,255,255,0.55);
-    line-height: 1.4;
-  }
+.hero-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+.hero-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(139,195,74,0.15);
+  border: 1px solid rgba(139,195,74,0.35);
+  color: var(--brand-light);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 20px;
+  margin-bottom: 18px;
+}
+.hero-label::before { content: '●'; color: var(--brand); animation: blink 1.5s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-  /* === FORM CARD === */
-  .form-card {
-    margin: 20px 16px 0;
-    background: var(--white);
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(174,234,0,0.15);
-  }
+.hero-title {
+  font-family: var(--font-main);
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 900;
+  color: white;
+  text-transform: uppercase;
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+.hero-title .highlight {
+  color: var(--brand);
+  display: block;
+  font-size: clamp(32px, 6vw, 56px);
+  text-shadow: 0 0 30px rgba(139,195,74,0.4);
+}
+.hero-desc {
+  font-size: 15px;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.7;
+  margin-bottom: 28px;
+  max-width: 420px;
+}
+.hero-desc strong { color: var(--brand-light); }
+.hero-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 
-  .form-card-header {
-    background: linear-gradient(135deg, var(--green) 0%, #2e5e0e 100%);
-    padding: 20px 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .form-card-icon {
-    width: 44px; height: 44px;
-    background: var(--lime);
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
-    flex-shrink: 0;
-  }
-  .form-card-title {
-    font-family: 'Baloo 2', sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--white);
-  }
-  .form-card-subtitle {
-    font-size: 12px;
-    color: rgba(255,255,255,0.65);
-    margin-top: 2px;
-  }
+/* Bus types tags */
+.bus-tags {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-top: 24px;
+}
+.bus-tag {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.8);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+}
 
-  .form-body { padding: 24px; }
+/* Hero image side */
+.hero-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.hero-img-wrap {
+  width: 100%;
+  aspect-ratio: 16/10;
+  background: linear-gradient(135deg, rgba(139,195,74,0.2), rgba(85,139,47,0.3));
+  border-radius: 20px;
+  border: 2px dashed rgba(139,195,74,0.4);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero-img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  border-radius: 18px;
+  display: none; /* hiện khi có ảnh thật */
+}
+.hero-img-placeholder {
+  text-align: center;
+  color: rgba(255,255,255,0.5);
+}
+.hero-img-placeholder .placeholder-icon { font-size: 48px; margin-bottom: 8px; }
+.hero-img-placeholder p { font-size: 12px; line-height: 1.5; }
+.hero-cta-phone {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: white;
+  font-size: 14px; font-weight: 700;
+  padding: 10px 18px; border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.hero-cta-phone:hover { background: rgba(255,255,255,0.2); }
 
-  .field-group { margin-bottom: 20px; }
+/* ═══════════════════════════════════════════════
+   SECTION 2 — DÒNG XE
+═══════════════════════════════════════════════ */
+.section-cars {
+  padding: 80px 0 70px;
+  background: var(--off-white);
+}
+.section-cars-header { text-align: center; margin-bottom: 50px; }
 
-  label {
-    display: block;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 8px;
-    letter-spacing: 0.2px;
-  }
-  label .req { color: #e53935; margin-left: 3px; }
-  label .opt {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--text-muted);
-    background: #f0f0f0;
-    padding: 2px 7px;
-    border-radius: 10px;
-    margin-left: 6px;
-  }
+.cars-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+.car-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  border: 1px solid rgba(139,195,74,0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+.car-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(139,195,74,0.2);
+  border-color: var(--brand);
+}
+.car-card.featured { border-color: var(--brand); border-width: 2px; position: relative; }
+.car-card.featured::before {
+  content: '⭐ LIMOUSINE';
+  position: absolute; top: 14px; right: -28px;
+  background: var(--brand-dark);
+  color: white;
+  font-size: 10px; font-weight: 800; letter-spacing: 1px;
+  padding: 4px 40px;
+  transform: rotate(45deg);
+}
 
-  input[type="tel"], input[type="text"], input[type="url"] {
-    width: 100%;
-    padding: 14px 16px;
-    border: 2px solid #e8e8e8;
-    border-radius: var(--radius-sm);
-    font-family: 'Nunito', sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--text);
-    background: var(--gray);
-    transition: all 0.25s ease;
-    outline: none;
-    -webkit-appearance: none;
-  }
-  input:focus {
-    border-color: var(--lime-dark);
-    background: var(--white);
-    box-shadow: 0 0 0 4px rgba(174,234,0,0.15);
-  }
-  input.error { border-color: #e53935; background: #fff5f5; }
-  input.valid { border-color: #43a047; }
+.car-img {
+  width: 100%; aspect-ratio: 16/9;
+  background: linear-gradient(135deg, var(--brand-pale), var(--brand-light));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 48px;
+  position: relative;
+  overflow: hidden;
+}
+.car-img img { width:100%; height:100%; object-fit:cover; display:none; }
+.car-img-label {
+  position: absolute; bottom: 8px; left: 10px;
+  background: rgba(27,62,8,0.8);
+  color: var(--brand-light);
+  font-size: 10px; font-weight: 700; letter-spacing: 1px;
+  padding: 3px 8px; border-radius: 4px;
+}
 
-  .field-hint {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 5px;
-    line-height: 1.4;
-  }
-  .field-error {
-    font-size: 11px;
-    color: #e53935;
-    margin-top: 5px;
-    display: none;
-  }
-  .field-error.show { display: block; }
+.car-body { padding: 18px; }
+.car-seats {
+  font-family: var(--font-main);
+  font-size: 22px; font-weight: 900;
+  color: var(--brand-dark);
+  margin-bottom: 4px;
+}
+.car-name {
+  font-size: 13px; font-weight: 700;
+  color: var(--text-mid);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 14px;
+}
+.car-features { list-style: none; }
+.car-features li {
+  font-size: 13px; color: var(--text-mid);
+  padding: 5px 0;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex; align-items: flex-start; gap: 8px;
+  line-height: 1.4;
+}
+.car-features li:last-child { border-bottom: none; }
+.car-features li::before {
+  content: '✓';
+  color: var(--brand-dark);
+  font-weight: 800;
+  font-size: 12px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
 
-  /* Upload zone */
-  .upload-zone {
-    border: 2px dashed #d0e8a0;
-    border-radius: var(--radius-sm);
-    background: #f8fff0;
-    padding: 24px 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    position: relative;
-  }
-  .upload-zone:hover, .upload-zone.drag-over {
-    border-color: var(--lime-dark);
-    background: var(--lime-pale);
-  }
-  .upload-zone input[type="file"] {
-    position: absolute; inset: 0; opacity: 0; cursor: pointer;
-    width: 100%; height: 100%;
-    border: none; padding: 0; background: none; box-shadow: none;
-  }
-  .upload-icon { font-size: 36px; margin-bottom: 8px; }
-  .upload-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--green-mid);
-    margin-bottom: 4px;
-  }
-  .upload-desc {
-    font-size: 12px;
-    color: var(--text-muted);
-  }
+/* ═══════════════════════════════════════════════
+   SECTION 3 — TẠI SAO CHỌN
+═══════════════════════════════════════════════ */
+.section-why {
+  padding: 80px 0;
+  background: linear-gradient(160deg, #1c3b08 0%, #2a5410 100%);
+  position: relative;
+  overflow: hidden;
+}
+.section-why::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%238BC34A' fill-opacity='0.04'%3E%3Cpath d='M40 0L80 40L40 80L0 40z'/%3E%3C/g%3E%3C/svg%3E");
+}
+.section-why-header { text-align: center; margin-bottom: 50px; position: relative; }
+.section-why-header .section-title { color: white; }
+.section-why-header .section-label { background: rgba(139,195,74,0.15); color: var(--brand-light); border-color: rgba(139,195,74,0.3); }
 
-  /* Preview grid */
-  .preview-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin-top: 12px;
-  }
-  .preview-item {
-    position: relative;
-    aspect-ratio: 1;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #eee;
-  }
-  .preview-item img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-  }
-  .preview-remove {
-    position: absolute;
-    top: 4px; right: 4px;
-    width: 22px; height: 22px;
-    background: rgba(0,0,0,0.6);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    font-size: 13px;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    line-height: 1;
-  }
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  position: relative;
+}
+.why-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(139,195,74,0.2);
+  border-radius: 18px;
+  padding: 28px 22px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.why-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--brand), var(--brand-dark));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+.why-card:hover::before { transform: scaleX(1); }
+.why-card:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(139,195,74,0.4);
+  transform: translateY(-4px);
+}
+.why-icon {
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 14px rgba(139,195,74,0.3);
+}
+.why-title {
+  font-family: var(--font-main);
+  font-size: 15px; font-weight: 800;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 8px;
+}
+.why-desc { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.6; }
 
-  /* Submit btn */
-  .btn-submit {
-    width: 100%;
-    padding: 18px;
-    background: linear-gradient(135deg, #AEEA00, #76C200);
-    color: var(--green);
-    font-family: 'Baloo 2', sans-serif;
-    font-size: 18px;
-    font-weight: 800;
-    border: none;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    letter-spacing: 0.3px;
-    position: relative;
-    overflow: hidden;
-    margin-top: 8px;
-  }
-  .btn-submit::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  .btn-submit:hover::after { opacity: 1; }
-  .btn-submit:active { transform: scale(0.98); }
-  .btn-submit:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-  }
+/* ═══════════════════════════════════════════════
+   SECTION 4 — CHECK-IN FORM
+═══════════════════════════════════════════════ */
+.section-checkin {
+  padding: 80px 0 100px;
+  background: var(--off-white);
+  position: relative;
+}
+.section-checkin::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--brand), var(--accent), var(--brand));
+  background-size: 200% 100%;
+  animation: gradientSlide 3s linear infinite;
+}
+@keyframes gradientSlide { 0%{background-position:0%} 100%{background-position:200%} }
 
-  .btn-submit .btn-loading { display: none; }
-  .btn-submit.loading .btn-text { display: none; }
-  .btn-submit.loading .btn-loading { display: inline-flex; align-items: center; gap: 8px; }
+.checkin-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 50px;
+  align-items: start;
+}
+.checkin-info { position: sticky; top: 90px; }
+.checkin-info .section-label { background: rgba(229,57,53,0.08); color: var(--accent); border-color: rgba(229,57,53,0.2); }
+.checkin-info .section-title { margin-bottom: 16px; }
+.checkin-tagline {
+  font-size: 15px; color: var(--text-mid);
+  line-height: 1.7; margin-bottom: 24px;
+}
 
-  .spinner {
-    width: 18px; height: 18px;
-    border: 3px solid rgba(27,94,32,0.3);
-    border-top-color: var(--green);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
+.reward-cards { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+.reward-card {
+  display: flex; align-items: center; gap: 16px;
+  background: white; border-radius: 14px; padding: 16px;
+  border: 1px solid rgba(139,195,74,0.2);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.reward-card:hover { transform: translateX(4px); box-shadow: 0 4px 16px rgba(139,195,74,0.15); }
+.reward-icon {
+  width: 48px; height: 48px; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--brand-pale), var(--brand-light));
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+}
+.reward-icon.hot { background: linear-gradient(135deg, #fff3e0, #ffe0b2); }
+.reward-text-type { font-size: 11px; color: var(--text-light); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.reward-text-val {
+  font-family: var(--font-main);
+  font-size: 20px; font-weight: 900;
+  color: var(--accent);
+}
+.reward-text-desc { font-size: 12px; color: var(--text-light); }
 
-  .privacy-note {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    background: #f8fff0;
-    border: 1px solid #d0e8a0;
-    border-radius: 8px;
-    padding: 10px 12px;
-    margin-top: 16px;
-  }
-  .privacy-note span { font-size: 16px; flex-shrink: 0; }
-  .privacy-note p { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+.checkin-steps { margin-top: 16px; }
+.checkin-step {
+  display: flex; gap: 14px; align-items: flex-start;
+  margin-bottom: 14px;
+}
+.checkin-step-num {
+  width: 28px; height: 28px; flex-shrink: 0;
+  background: var(--brand-dark);
+  color: white;
+  font-family: var(--font-main);
+  font-size: 13px; font-weight: 900;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 1px;
+}
+.checkin-step-text { font-size: 13px; color: var(--text-mid); line-height: 1.5; }
+.checkin-step-text strong { color: var(--text); }
 
-  /* === SUCCESS SCREEN === */
-  .success-screen {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    background: linear-gradient(160deg, #0d1f0d, #0a2a05);
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 32px 24px;
-    text-align: center;
-  }
-  .success-screen.show { display: flex; }
+.hashtags {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: 6px;
+}
+.hashtag {
+  background: var(--brand-pale);
+  color: var(--brand-dark);
+  font-size: 11px; font-weight: 700;
+  padding: 3px 10px; border-radius: 20px;
+  border: 1px solid var(--brand-light);
+}
 
-  .success-lottie {
-    width: 120px; height: 120px;
-    background: linear-gradient(135deg, var(--lime), var(--lime-dark));
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 56px;
-    margin-bottom: 28px;
-    animation: successPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 0 60px rgba(174,234,0,0.4);
-  }
-  @keyframes successPop {
-    from { transform: scale(0); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-  }
+/* Form */
+.checkin-form-wrap {
+  background: white;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(139,195,74,0.15);
+}
+.form-header {
+  background: linear-gradient(135deg, var(--brand-dark), #4a7a1e);
+  padding: 22px 28px;
+  display: flex; align-items: center; gap: 14px;
+}
+.form-header-icon {
+  width: 46px; height: 46px;
+  background: var(--brand);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.form-header-title {
+  font-family: var(--font-main);
+  font-size: 18px; font-weight: 800;
+  color: white;
+}
+.form-header-sub { font-size: 12px; color: rgba(255,255,255,0.65); }
+.form-body { padding: 28px; }
 
-  .success-title {
-    font-family: 'Baloo 2', sans-serif;
-    font-size: 30px;
-    font-weight: 800;
-    color: var(--white);
-    margin-bottom: 8px;
-    animation: fadeUp 0.5s 0.2s both;
-  }
-  .success-sub {
-    font-size: 15px;
-    color: rgba(255,255,255,0.65);
-    line-height: 1.6;
-    margin-bottom: 32px;
-    animation: fadeUp 0.5s 0.35s both;
-    max-width: 300px;
-  }
-  @keyframes fadeUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
+.field-group { margin-bottom: 20px; }
+label {
+  display: block; font-size: 13px; font-weight: 700;
+  color: var(--text); margin-bottom: 8px;
+}
+label .req { color: var(--accent); margin-left: 3px; }
+label .opt { font-size: 11px; font-weight: 600; color: var(--text-light); background: #f5f5f5; padding: 2px 7px; border-radius: 8px; margin-left: 6px; }
 
-  .ticket-badge {
-    background: rgba(174,234,0,0.1);
-    border: 2px solid rgba(174,234,0,0.3);
-    border-radius: 20px;
-    padding: 20px 28px;
-    margin-bottom: 28px;
-    animation: fadeUp 0.5s 0.5s both;
-  }
-  .ticket-badge-title {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--lime);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 6px;
-  }
-  .ticket-badge-val {
-    font-family: 'Baloo 2', sans-serif;
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--white);
-  }
+input[type="tel"],input[type="text"],input[type="url"] {
+  width: 100%; padding: 14px 16px;
+  border: 2px solid #e8e8e8; border-radius: 10px;
+  font-family: var(--font-sub); font-size: 15px; font-weight: 600;
+  color: var(--text); background: #fafafa;
+  transition: all 0.25s; outline: none; -webkit-appearance: none;
+}
+input:focus { border-color: var(--brand); background: white; box-shadow: 0 0 0 4px rgba(139,195,74,0.12); }
+input.error { border-color: var(--accent); }
 
-  .btn-download-app {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: var(--lime);
-    color: var(--green);
-    font-family: 'Baloo 2', sans-serif;
-    font-size: 17px;
-    font-weight: 800;
-    padding: 18px 32px;
-    border-radius: 14px;
-    text-decoration: none;
-    margin-bottom: 16px;
-    width: 100%;
-    max-width: 320px;
-    justify-content: center;
-    animation: fadeUp 0.5s 0.65s both;
-    box-shadow: 0 8px 30px rgba(174,234,0,0.3);
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  .btn-download-app:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(174,234,0,0.4);
-  }
-  .btn-download-app .app-icon { font-size: 24px; }
+.upload-zone {
+  border: 2px dashed #c8e6a0; border-radius: 10px;
+  background: var(--brand-pale); padding: 22px 16px;
+  text-align: center; cursor: pointer; position: relative;
+  transition: all 0.25s;
+}
+.upload-zone:hover,.upload-zone.drag-over { border-color: var(--brand-dark); background: #e8f5e9; }
+.upload-zone input[type="file"] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer;
+  width:100%;height:100%; border:none; padding:0; background:none; box-shadow:none;
+}
+.upload-icon { font-size: 32px; margin-bottom: 6px; }
+.upload-title { font-size: 14px; font-weight: 700; color: var(--brand-dark); margin-bottom: 3px; }
+.upload-desc { font-size: 12px; color: var(--text-light); }
 
-  .success-footnote {
-    font-size: 12px;
-    color: rgba(255,255,255,0.35);
-    animation: fadeUp 0.5s 0.8s both;
-    line-height: 1.5;
-  }
+.preview-grid {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 8px; margin-top: 12px;
+}
+.preview-item { position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; background: #eee; }
+.preview-item img { width:100%; height:100%; object-fit:cover; }
+.preview-remove {
+  position: absolute; top: 3px; right: 3px;
+  width: 20px; height: 20px;
+  background: rgba(0,0,0,0.6); color: white;
+  border: none; border-radius: 50%; font-size: 12px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
 
-  /* Countdown & fallback */
-  .redirect-countdown {
-    font-size: 13px;
-    color: rgba(255,255,255,0.45);
-    margin-bottom: 14px;
-    animation: fadeUp 0.5s 0.5s both;
-  }
-  .redirect-countdown span { color: var(--lime); font-weight: 800; }
+.field-error { font-size: 11px; color: var(--accent); margin-top: 5px; display: none; }
+.field-error.show { display: block; }
 
-  .btn-fallback {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: 1px solid rgba(255,255,255,0.2);
-    color: rgba(255,255,255,0.55);
-    font-family: 'Nunito', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 10px 20px;
-    border-radius: 100px;
-    cursor: pointer;
-    margin-bottom: 20px;
-    width: 100%;
-    max-width: 320px;
-    transition: all 0.2s;
-  }
-  .btn-fallback:hover { border-color: var(--lime); color: var(--lime); }
+.btn-submit-main {
+  width: 100%; padding: 18px;
+  background: linear-gradient(135deg, var(--accent), #c62828);
+  color: white; font-family: var(--font-main);
+  font-size: 18px; font-weight: 900;
+  border: none; border-radius: 10px; cursor: pointer;
+  transition: all 0.3s; text-transform: uppercase;
+  letter-spacing: 0.5px; box-shadow: 0 6px 20px rgba(229,57,53,0.35);
+  position: relative; overflow: hidden;
+}
+.btn-submit-main:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(229,57,53,0.45); }
+.btn-submit-main:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.btn-loading { display: none; }
+.btn-submit-main.loading .btn-text { display: none; }
+.btn-submit-main.loading .btn-loading { display: inline-flex; align-items: center; gap: 8px; }
+.spinner { width: 18px; height: 18px; border: 3px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-  /* Toast */
-  .toast {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: #1a1a1a;
-    color: white;
-    padding: 12px 20px;
-    border-radius: 100px;
-    font-size: 13px;
-    font-weight: 600;
-    z-index: 200;
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    white-space: nowrap;
-    max-width: 90vw;
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-  .toast.error-toast { background: #c62828; }
+.privacy-note {
+  display: flex; align-items: flex-start; gap: 8px;
+  background: var(--brand-pale); border: 1px solid var(--brand-light);
+  border-radius: 8px; padding: 10px 12px; margin-top: 14px;
+}
+.privacy-note p { font-size: 11px; color: var(--text-light); line-height: 1.5; }
 
-  /* === FOOTER === */
-  .footer {
-    text-align: center;
-    padding: 24px 20px;
-    color: rgba(255,255,255,0.25);
-    font-size: 11px;
-    line-height: 1.7;
-  }
+.checkin-notice {
+  background: linear-gradient(135deg, #fff8e1, #fff3cd);
+  border: 1px solid #ffe082; border-radius: 12px;
+  padding: 14px 16px; margin-bottom: 20px;
+}
+.checkin-notice-title {
+  font-size: 12px; font-weight: 800; color: var(--accent-warm);
+  text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;
+}
+.checkin-notice ul { list-style: none; }
+.checkin-notice li {
+  font-size: 12px; color: #5d4037;
+  padding: 3px 0; padding-left: 16px; position: relative; line-height: 1.5;
+}
+.checkin-notice li::before { content: '→'; position: absolute; left: 0; color: var(--accent-warm); font-weight: 700; }
 
-  /* Confetti */
-  .confetti-piece {
-    position: fixed;
-    width: 8px; height: 8px;
-    top: -10px;
-    border-radius: 2px;
-    z-index: 150;
-    animation: confettiFall linear forwards;
-  }
-  @keyframes confettiFall {
-    to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
-  }
+/* ═══════════════════════════════════════════════
+   SECTION 5 — FEEDBACK
+═══════════════════════════════════════════════ */
+.section-feedback {
+  padding: 80px 0;
+  background: white;
+}
+.section-feedback-header { text-align: center; margin-bottom: 44px; }
+.feedback-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+.feedback-card {
+  background: var(--off-white);
+  border-radius: 18px; padding: 22px;
+  border: 1px solid rgba(139,195,74,0.15);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.feedback-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(139,195,74,0.12); }
+.feedback-stars { color: var(--gold); font-size: 16px; margin-bottom: 10px; letter-spacing: 2px; }
+.feedback-text {
+  font-size: 14px; color: var(--text-mid);
+  line-height: 1.7; margin-bottom: 14px;
+  font-style: italic;
+}
+.feedback-author { display: flex; align-items: center; gap: 10px; }
+.feedback-avatar {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: white; font-weight: 700; flex-shrink: 0;
+}
+.feedback-name { font-size: 13px; font-weight: 700; color: var(--text); }
+.feedback-route { font-size: 11px; color: var(--text-light); }
+
+/* ═══════════════════════════════════════════════
+   SECTION 6 — FAQ
+═══════════════════════════════════════════════ */
+.section-faq {
+  padding: 80px 0;
+  background: var(--brand-pale);
+}
+.section-faq-header { text-align: center; margin-bottom: 44px; }
+.faq-list { max-width: 720px; margin: 0 auto; }
+.faq-item {
+  background: white; border-radius: 14px;
+  margin-bottom: 10px; overflow: hidden;
+  border: 1px solid rgba(139,195,74,0.2);
+  transition: box-shadow 0.2s;
+}
+.faq-item:hover { box-shadow: 0 4px 16px rgba(139,195,74,0.1); }
+.faq-question {
+  width: 100%; text-align: left; background: none; border: none; cursor: pointer;
+  padding: 18px 22px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  font-family: var(--font-main); font-size: 14px; font-weight: 700;
+  color: var(--text); line-height: 1.4;
+  transition: color 0.2s;
+}
+.faq-question:hover { color: var(--brand-dark); }
+.faq-question.open { color: var(--brand-dark); }
+.faq-icon { font-size: 18px; flex-shrink: 0; transition: transform 0.3s; color: var(--brand-dark); }
+.faq-question.open .faq-icon { transform: rotate(45deg); }
+.faq-answer {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.35s ease, padding 0.35s ease;
+  font-size: 13px; color: var(--text-mid); line-height: 1.7;
+  padding: 0 22px;
+}
+.faq-answer.open { max-height: 200px; padding: 0 22px 18px; }
+
+/* ═══════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════ */
+.footer {
+  background: linear-gradient(160deg, #0f2005, #1a3a08);
+  padding: 50px 0 80px; /* 80px để không bị sticky bar che */
+  color: rgba(255,255,255,0.65);
+}
+.footer-inner {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 40px;
+}
+.footer-brand .nav-logo { margin-bottom: 14px; }
+.footer-brand .nav-logo-text { color: white; }
+.footer-brand p { font-size: 13px; line-height: 1.7; margin-bottom: 16px; }
+.footer-social { display: flex; gap: 10px; }
+.footer-social a {
+  width: 36px; height: 36px;
+  background: rgba(139,195,74,0.15);
+  border: 1px solid rgba(139,195,74,0.25);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; text-decoration: none;
+  transition: all 0.2s;
+}
+.footer-social a:hover { background: var(--brand); border-color: var(--brand); }
+.footer-col-title {
+  font-family: var(--font-main);
+  font-size: 13px; font-weight: 800;
+  color: white; text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 14px;
+}
+.footer-col ul { list-style: none; }
+.footer-col li { margin-bottom: 8px; }
+.footer-col a {
+  font-size: 13px; color: rgba(255,255,255,0.55);
+  text-decoration: none; transition: color 0.2s;
+}
+.footer-col a:hover { color: var(--brand-light); }
+.footer-bottom {
+  margin-top: 40px; padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  text-align: center; font-size: 12px; color: rgba(255,255,255,0.3);
+}
+
+/* ═══════════════════════════════════════════════
+   SUCCESS SCREEN
+═══════════════════════════════════════════════ */
+.success-screen {
+  display: none; position: fixed; inset: 0; z-index: 1100;
+  background: linear-gradient(160deg, #0d1f0d, #0a2a05);
+  flex-direction: column; align-items: center; justify-content: center;
+  padding: 32px 24px; text-align: center;
+}
+.success-screen.show { display: flex; }
+.success-icon {
+  width: 110px; height: 110px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 52px; margin-bottom: 24px;
+  animation: successPop 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 0 60px rgba(139,195,74,0.4);
+}
+@keyframes successPop { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+.success-title { font-family:var(--font-main); font-size:28px; font-weight:900; color:white; margin-bottom:8px; animation:fadeUp 0.5s 0.2s both; }
+.success-sub { font-size:14px; color:rgba(255,255,255,0.6); line-height:1.6; margin-bottom:28px; animation:fadeUp 0.5s 0.35s both; max-width:300px; }
+@keyframes fadeUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+.success-reward {
+  background: rgba(139,195,74,0.1); border: 2px solid rgba(139,195,74,0.3);
+  border-radius: 18px; padding: 18px 28px; margin-bottom: 24px;
+  animation: fadeUp 0.5s 0.5s both;
+}
+.success-reward-label { font-size:11px; font-weight:700; color:var(--brand); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+.success-reward-val { font-family:var(--font-main); font-size:20px; font-weight:900; color:white; }
+.redirect-countdown { font-size:13px; color:rgba(255,255,255,0.4); margin-bottom:14px; animation:fadeUp 0.5s 0.5s both; }
+.redirect-countdown span { color:var(--brand); font-weight:800; }
+.btn-app {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+  color: white; font-family:var(--font-main); font-size:16px; font-weight:800;
+  padding: 16px 32px; border-radius: 14px; text-decoration: none;
+  max-width:320px; width:100%; margin-bottom:14px;
+  animation: fadeUp 0.5s 0.65s both;
+  box-shadow: 0 8px 28px rgba(139,195,74,0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-app:hover { transform:translateY(-2px); box-shadow:0 12px 36px rgba(139,195,74,0.4); }
+.btn-fallback {
+  display: none; align-items: center; justify-content: center;
+  background: transparent; border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.5); font-size:13px; font-weight:600;
+  padding: 10px 20px; border-radius: 100px; cursor: pointer;
+  max-width:320px; width:100%; transition: all 0.2s; margin-bottom:20px;
+}
+.btn-fallback:hover { border-color:var(--brand); color:var(--brand); }
+.success-note { font-size:12px; color:rgba(255,255,255,0.3); line-height:1.5; animation:fadeUp 0.5s 0.8s both; }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 80px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: #1a1a1a; color: white;
+  padding: 12px 20px; border-radius: 100px;
+  font-size: 13px; font-weight: 600; z-index: 1200;
+  transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+  white-space: nowrap; max-width: 90vw;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.err { background: #c62828; }
+
+/* Confetti */
+.confetti-piece {
+  position: fixed; width:8px; height:8px; top:-10px;
+  border-radius:2px; z-index:1150;
+  animation: confettiFall linear forwards;
+}
+@keyframes confettiFall { to{transform:translateY(110vh) rotate(720deg);opacity:0} }
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-visual { display: none; }
+  .checkin-layout { grid-template-columns: 1fr; }
+  .checkin-info { position: static; }
+  .footer-inner { grid-template-columns: 1fr; gap: 28px; }
+  .nav-actions .btn-secondary { display: none; }
+  .cars-grid { grid-template-columns: 1fr 1fr; }
+  .preview-grid { grid-template-columns: repeat(3,1fr); }
+  .hero-title .highlight { font-size: clamp(26px,8vw,40px); }
+}
+@media (max-width: 480px) {
+  .cars-grid { grid-template-columns: 1fr; }
+  .why-grid { grid-template-columns: 1fr; }
+  .feedback-grid { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
 
-<div class="bg-layer">
-  <div class="blob blob-1"></div>
-  <div class="blob blob-2"></div>
-  <div class="blob blob-3"></div>
+<!-- ══════════════════════════════════════════
+     POPUP
+══════════════════════════════════════════ -->
+<div class="popup-overlay" id="popup">
+  <div class="popup-box">
+    <div class="popup-top">
+      <button class="popup-close" id="popupClose">✕</button>
+      <div class="popup-badge">🎫 Chương trình đặc biệt</div>
+      <div class="popup-title">Check-in ngay<br>Nhận Magic Ticket liền tay!</div>
+      <div class="popup-cards">
+        <div class="popup-card">
+          <div class="popup-card-icon">🎬</div>
+          <div class="popup-card-type">Chia sẻ video</div>
+          <div class="popup-card-val">600K</div>
+          <div class="popup-card-unit">Magic Ticket</div>
+        </div>
+        <div class="popup-card">
+          <div class="popup-card-icon">📸</div>
+          <div class="popup-card-type">Chia sẻ hình ảnh</div>
+          <div class="popup-card-val">300K</div>
+          <div class="popup-card-unit">Magic Ticket</div>
+        </div>
+      </div>
+    </div>
+    <div class="popup-bottom">
+      <p class="popup-note">Áp dụng cho hệ thống Taxi điện Nam Thắng các tỉnh Miền Tây</p>
+      <a href="#checkin" class="btn btn-primary popup-cta" id="popupCta">🎯 Tham gia ngay</a>
+    </div>
+  </div>
 </div>
 
-<div class="particles" id="particles"></div>
-
-<!-- SUCCESS SCREEN -->
+<!-- ══════════════════════════════════════════
+     SUCCESS SCREEN
+══════════════════════════════════════════ -->
 <div class="success-screen" id="successScreen">
-  <div class="success-lottie">🎉</div>
+  <div class="success-icon">🎉</div>
   <div class="success-title">Check-in thành công!</div>
-  <div class="success-sub">Cảm ơn bạn đã tham gia chiến dịch <strong style="color:var(--lime)">Nối Tiếp Thảnh Thơi</strong>. Magic Ticket đang chờ bạn trong app!</div>
-
-  <div class="ticket-badge">
-    <div class="ticket-badge-title">🎫 Phần thưởng của bạn</div>
-    <div class="ticket-badge-val">Magic Ticket – Taxi Điện</div>
+  <div class="success-sub">Cảm ơn bạn đã tham gia chiến dịch <strong style="color:var(--brand)">Hè Thảnh Thơi</strong>. Magic Ticket đang được xử lý!</div>
+  <div class="success-reward">
+    <div class="success-reward-label">🎫 Phần thưởng của bạn</div>
+    <div class="success-reward-val">Magic Ticket – Taxi Điện Nam Thắng</div>
   </div>
-
-  <p class="redirect-countdown" id="redirectCountdown">
-    ⏳ Tự động chuyển đến store sau <span id="cdNum">5</span> giây...
-  </p>
-
-  <a href="#" class="btn-download-app" id="appLink" target="_blank">
-    <span class="app-icon">📱</span>
-    <span class="app-label">Tải App Taxi Điện Nam Thắng</span>
-  </a>
-
-  <button class="btn-fallback" id="fallbackBtn" style="display:none">
-    Nhấn đây nếu chưa được chuyển trang →
-  </button>
-
-  <p class="success-footnote">
-    Mở app → Mục Ưu Đãi → Dùng Magic Ticket<br>
-    để book chuyến đi ngay!
-  </p>
+  <p class="redirect-countdown">⏳ Chuyển đến App Store sau <span id="cdNum">5</span> giây...</p>
+  <a href="#" class="btn-app" id="appLink"><span>📱</span><span id="appLabel">Tải App Taxi Điện Nam Thắng</span></a>
+  <button class="btn-fallback" id="fallbackBtn">Nhấn đây nếu chưa được chuyển trang →</button>
+  <p class="success-note">Mở app → Mục Ưu Đãi → Dùng Magic Ticket<br>Voucher có hiệu lực sau 24h</p>
 </div>
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<div class="container">
-  <!-- HEADER -->
-  <div class="header">
-    <div class="logo-wrap">
-      <div class="logo-dot"></div>
-      <span class="logo-text">Nam Thắng Travel Bus</span>
-    </div>
-
-    <div>
-      <span class="header-badge">🚌 Chiến dịch đặc biệt</span>
-    </div>
-
-    <h1>Check-in ngay<span>Quà liền tay!</span></h1>
-    <p class="header-sub">Chụp ảnh trên xe, điền thông tin và nhận ngay <strong style="color:var(--lime-light)">Magic Ticket</strong> miễn phí đi taxi điện Nam Thắng.</p>
-  </div>
-
-  <!-- STEPS -->
-  <div class="steps-bar">
-    <div class="step-item">
-      <div class="step-circle active" id="step1c">1</div>
-      <div class="step-label active" id="step1l">Điền info</div>
-    </div>
-    <div class="step-connector" id="con1"></div>
-    <div class="step-item">
-      <div class="step-circle" id="step2c">2</div>
-      <div class="step-label" id="step2l">Ảnh check-in</div>
-    </div>
-    <div class="step-connector" id="con2"></div>
-    <div class="step-item">
-      <div class="step-circle" id="step3c">3</div>
-      <div class="step-label" id="step3l">Nhận thưởng</div>
-    </div>
-  </div>
-
-  <!-- INFO CARDS -->
-  <div class="info-cards">
-    <div class="info-card">
-      <div class="info-card-icon">🎟️</div>
-      <div class="info-card-title">Magic Ticket</div>
-      <div class="info-card-desc">Voucher giảm giá chuyến taxi điện</div>
-    </div>
-    <div class="info-card">
-      <div class="info-card-icon">⚡</div>
-      <div class="info-card-title">Tức thì</div>
-      <div class="info-card-desc">Nhận ngay qua app sau khi check-in</div>
-    </div>
-    <div class="info-card">
-      <div class="info-card-icon">🌿</div>
-      <div class="info-card-title">Xanh & Sạch</div>
-      <div class="info-card-desc">Taxi điện thân thiện môi trường</div>
-    </div>
-    <div class="info-card">
-      <div class="info-card-icon">🛣️</div>
-      <div class="info-card-title">Miền Tây</div>
-      <div class="info-card-desc">Áp dụng tại điểm đến miền Tây</div>
-    </div>
-  </div>
-
-  <!-- FORM -->
-  <div class="form-card">
-    <div class="form-card-header">
-      <div class="form-card-icon">📋</div>
-      <div>
-        <div class="form-card-title">Thông tin check-in</div>
-        <div class="form-card-subtitle">3 bước đơn giản – nhận quà ngay!</div>
-      </div>
-    </div>
-
-    <div class="form-body">
-      <form id="checkinForm" novalidate>
-
-        <!-- SĐT -->
-        <div class="field-group">
-          <label for="phone">Số điện thoại <span class="req">*</span></label>
-          <input type="tel" id="phone" name="phone" placeholder="09x xxxx xxxx"
-            inputmode="tel" maxlength="11" autocomplete="tel">
-          <div class="field-hint">Dùng SĐT đã đăng ký / sẽ đăng ký app Taxi Nam Thắng</div>
-          <div class="field-error" id="phone-error">Vui lòng nhập số điện thoại hợp lệ</div>
-        </div>
-
-        <!-- Họ tên -->
-        <div class="field-group">
-          <label for="name">Họ và tên <span class="req">*</span></label>
-          <input type="text" id="name" name="name" placeholder="Nguyễn Văn A"
-            autocomplete="name">
-          <div class="field-error" id="name-error">Vui lòng nhập họ tên</div>
-        </div>
-
-        <!-- Link FB/TikTok (optional) -->
-        <div class="field-group">
-          <label for="social">Link bài đăng Facebook / TikTok <span class="opt">Tùy chọn</span></label>
-          <input type="url" id="social" name="social"
-            placeholder="https://www.facebook.com/...">
-          <div class="field-hint">Nếu bạn đã đăng bài check-in, dán link vào đây để tăng cơ hội nhận thêm quà 🎁</div>
-        </div>
-
-        <!-- Ảnh check-in -->
-        <div class="field-group">
-          <label>Ảnh check-in trên xe <span class="req">*</span></label>
-          <div class="upload-zone" id="uploadZone">
-            <input type="file" id="photoInput" accept="image/*" multiple capture="environment">
-            <div class="upload-icon">📸</div>
-            <div class="upload-title">Chụp ảnh hoặc chọn từ thư viện</div>
-            <div class="upload-desc">Có thể chọn nhiều ảnh • JPG, PNG • Tối đa 5 ảnh</div>
-          </div>
-          <div class="preview-grid" id="previewGrid"></div>
-          <div class="field-error" id="photo-error">Vui lòng thêm ít nhất 1 ảnh check-in</div>
-        </div>
-
-        <button type="submit" class="btn-submit" id="submitBtn">
-          <span class="btn-text">🎫 Nhận Magic Ticket ngay!</span>
-          <span class="btn-loading"><div class="spinner"></div> Đang gửi...</span>
-        </button>
-
-        <div class="privacy-note">
-          <span>🔒</span>
-          <p>Thông tin của bạn được bảo mật và chỉ dùng để gửi Magic Ticket. Không chia sẻ cho bên thứ ba.</p>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div class="footer">
-    Nam Thắng Travel Bus · Chiến dịch Nối Tiếp Thảnh Thơi<br>
-    #HeThanhThoi #NamThangTravelBus #TaxiNamThang
-  </div>
+<!-- ══════════════════════════════════════════
+     STICKY BAR
+══════════════════════════════════════════ -->
+<div class="sticky-bar">
+  <a href="tel:0923098098" class="sticky-btn sticky-btn-call">
+    <span class="sticky-icon">📞</span> Hotline: 0923 098 098
+  </a>
+  <a href="https://zalo.me/0923098098" class="sticky-btn sticky-btn-zalo" target="_blank">
+    <span class="sticky-icon">💬</span> Zalo tư vấn
+  </a>
 </div>
 
-<script>
-// ─── CONFIG ────────────────────────────────
-// Thay YOUR_SCRIPT_ID bằng Web App ID của Google Apps Script
-const SHEET_URL     = 'https://script.google.com/macros/s/AKfycbyTCJemuCStWejT8jyPi3qMYRySietpvCez8BKFLvjvX_jqGJCrUIO6PAG0Ag96Os6m/exec';
-const ANDROID_LINK  = 'https://play.google.com/store/apps/details?id=vntaxi.namthang.passenger&pli=1';
-const IOS_LINK      = 'https://apps.apple.com/vn/app/taxi-nam-th%E1%BA%AFng/id6475762518?l=vi';
-// ───────────────────────────────────────────
+<!-- ══════════════════════════════════════════
+     NAVBAR
+══════════════════════════════════════════ -->
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <div class="navbar-inner">
+      <a href="#" class="nav-logo">
+        <div class="nav-logo-icon">🚌</div>
+        <div class="nav-logo-text">
+          Nam Thắng
+          <span>Travel Bus</span>
+        </div>
+      </a>
+      <div class="nav-actions">
+        <a href="tel:0923098098" class="btn btn-secondary">🚌 Tư vấn thuê xe</a>
+        <a href="#checkin" class="btn btn-primary">🎫 Nhận Magic Ticket</a>
+      </div>
+    </div>
+  </div>
+</nav>
 
-// ─── OS / BROWSER DETECTION (theo script gốc) ─────────────────────────────
+<!-- ══════════════════════════════════════════
+     SECTION 1 — HERO
+══════════════════════════════════════════ -->
+<section class="hero" id="home">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <div class="hero-label">Chiến dịch hè 2026</div>
+        <h1 class="hero-title">
+          Hè Thảnh Thơi<br>
+          <span class="highlight">Đi Chơi Xa</span>
+          Cùng Nam Thắng Travel Bus
+        </h1>
+        <p class="hero-desc">
+          Xe dịch vụ cao cấp tuyến <strong>Miền Tây</strong> — đặt xe linh hoạt theo đoàn,
+          tài xế kinh nghiệm, xe đời mới 2026. Khởi hành bất cứ lúc nào, đến bất cứ đâu.
+        </p>
+        <div class="hero-actions">
+          <a href="tel:0923098098" class="btn btn-primary">📞 Liên hệ: 0923 098 098</a>
+          <a href="#checkin" class="btn btn-brand">🎫 Nhận Magic Ticket</a>
+        </div>
+        <div class="bus-tags">
+          <span class="bus-tag">🚐 Xe 16 chỗ</span>
+          <span class="bus-tag">🚌 Xe 29 chỗ thường</span>
+          <span class="bus-tag">⭐ Xe 29 chỗ Limousine</span>
+          <span class="bus-tag">🚍 Xe 45 chỗ</span>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-img-wrap">
+          <!-- Thay src bằng ảnh thật -->
+          <img src="bus-fleet.jpg" alt="Đội xe Nam Thắng Travel Bus">
+          <div class="hero-img-placeholder">
+            <div class="placeholder-icon">🚌</div>
+            <p>Ảnh đội xe<br>Nam Thắng Travel Bus<br><small style="opacity:0.6">(Limousine 29 chỗ ở trung tâm)</small></p>
+          </div>
+        </div>
+        <a href="tel:0923098098" class="hero-cta-phone">
+          📞 Liên hệ tư vấn ngay: <strong>0923 098 098</strong>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECTION 2 — DÒNG XE
+══════════════════════════════════════════ -->
+<section class="section-cars" id="cars">
+  <div class="container">
+    <div class="section-cars-header reveal">
+      <div class="section-label">🚌 Đội xe của chúng tôi</div>
+      <h2 class="section-title">Các dòng xe<br><span>Nam Thắng Travel Bus</span></h2>
+    </div>
+
+    <div class="cars-grid">
+      <!-- Xe 16 chỗ -->
+      <div class="car-card reveal" style="transition-delay:0.1s">
+        <div class="car-img">
+          <img src="xe-16cho.jpg" alt="Xe 16 chỗ">
+          🚐
+          <div class="car-img-label">16 CHỖ</div>
+        </div>
+        <div class="car-body">
+          <div class="car-seats">16 Chỗ</div>
+          <div class="car-name">Xe phổ thông</div>
+          <ul class="car-features">
+            <li>Phù hợp gia đình, nhóm nhỏ 10–14 người</li>
+            <li>Linh hoạt, dễ di chuyển đường hẹp</li>
+            <li>Chi phí thấp, tiết kiệm</li>
+            <li>Máy lạnh, ghế tiêu chuẩn</li>
+            <li>Cảm giác gần gũi, thân thiện</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Xe 29 thường -->
+      <div class="car-card reveal" style="transition-delay:0.2s">
+        <div class="car-img">
+          <img src="xe-29cho.jpg" alt="Xe 29 chỗ">
+          🚌
+          <div class="car-img-label">29 CHỖ</div>
+        </div>
+        <div class="car-body">
+          <div class="car-seats">29 Chỗ</div>
+          <div class="car-name">Xe thường</div>
+          <ul class="car-features">
+            <li>Phù hợp nhóm trung bình 15–25 người</li>
+            <li>Cân bằng chi phí và sức chứa</li>
+            <li>Rộng rãi, đủ thoải mái</li>
+            <li>Máy lạnh, ghế tiêu chuẩn</li>
+            <li>Lý tưởng cho chuyến đi vừa phải</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Xe 29 Limousine -->
+      <div class="car-card featured reveal" style="transition-delay:0.3s">
+        <div class="car-img">
+          <img src="xe-limousine.jpg" alt="Xe 29 chỗ Limousine">
+          ⭐
+          <div class="car-img-label">LIMOUSINE</div>
+        </div>
+        <div class="car-body">
+          <div class="car-seats">29 Chỗ</div>
+          <div class="car-name">Limousine VIP</div>
+          <ul class="car-features">
+            <li>Ghế VIP massage, không gian riêng tư</li>
+            <li>WiFi, cổng sạc mỗi ghế</li>
+            <li>Sang trọng như "hạng thương gia" máy bay</li>
+            <li>Nhóm nhỏ muốn trải nghiệm cao cấp</li>
+            <li>Tiện nghi cao cấp toàn diện</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Xe 45 chỗ -->
+      <div class="car-card reveal" style="transition-delay:0.4s">
+        <div class="car-img">
+          <img src="xe-45cho.jpg" alt="Xe 45 chỗ">
+          🚍
+          <div class="car-img-label">45 CHỖ</div>
+        </div>
+        <div class="car-body">
+          <div class="car-seats">45 Chỗ</div>
+          <div class="car-name">Xe đoàn lớn</div>
+          <ul class="car-features">
+            <li>Phù hợp đoàn công ty, tour đông người</li>
+            <li>Tiết kiệm chi phí theo đầu người</li>
+            <li>Rộng rãi, phù hợp đi tập thể</li>
+            <li>Máy lạnh, ghế tiêu chuẩn</li>
+            <li>Lý tưởng sự kiện, teambuilding</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECTION 3 — TẠI SAO CHỌN
+══════════════════════════════════════════ -->
+<section class="section-why" id="why">
+  <div class="container">
+    <div class="section-why-header reveal">
+      <div class="section-label">💡 Điểm khác biệt</div>
+      <h2 class="section-title">Tại sao nên chọn<br>Nam Thắng Travel Bus?</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal" style="transition-delay:0.1s">
+        <div class="why-icon">🚗</div>
+        <div class="why-title">Xe đời mới 2026</div>
+        <div class="why-desc">Ghế ngồi êm ái, rộng rãi, nhiều tiện ích mới nhất. Xe được bảo dưỡng định kỳ, đảm bảo an toàn tuyệt đối.</div>
+      </div>
+      <div class="why-card reveal" style="transition-delay:0.2s">
+        <div class="why-icon">🛡️</div>
+        <div class="why-title">Tài xế kinh nghiệm</div>
+        <div class="why-desc">Lái an toàn, đúng lịch trình, hạn chế say xe cho người lớn tuổi và trẻ nhỏ. Am hiểu tuyến đường Miền Tây.</div>
+      </div>
+      <div class="why-card reveal" style="transition-delay:0.3s">
+        <div class="why-icon">🎯</div>
+        <div class="why-title">Đa dạng lựa chọn</div>
+        <div class="why-desc">Hệ thống xe từ 4–7–16–29–45 chỗ, đặc biệt dòng Limousine 29 chỗ cao cấp. Đáp ứng mọi nhu cầu di chuyển.</div>
+      </div>
+      <div class="why-card reveal" style="transition-delay:0.4s">
+        <div class="why-icon">⏰</div>
+        <div class="why-title">Chủ động thời gian</div>
+        <div class="why-desc">Toàn bộ lịch trình linh hoạt theo kế hoạch của đoàn. Không bị ràng buộc giờ cố định như xe khách thông thường.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECTION 4 — CHECK-IN FORM
+══════════════════════════════════════════ -->
+<section class="section-checkin" id="checkin">
+  <div class="container">
+    <div class="checkin-layout">
+
+      <!-- LEFT: Info -->
+      <div class="checkin-info reveal">
+        <div class="section-label">🎫 Chương trình khuyến mãi</div>
+        <h2 class="section-title">Check-in ngay<br><span>Nhận Magic Ticket</span><br>liền tay!</h2>
+        <p class="checkin-tagline">Chụp ảnh hoặc quay video sáng tạo cùng xe Nam Thắng, đăng lên mạng xã hội và điền thông tin để nhận ngay Magic Ticket taxi điện.</p>
+
+        <div class="reward-cards">
+          <div class="reward-card">
+            <div class="reward-icon hot">🎬</div>
+            <div>
+              <div class="reward-text-type">Chia sẻ khoảnh khắc video</div>
+              <div class="reward-text-val">Voucher 600.000đ</div>
+              <div class="reward-text-desc">Magic Ticket đi Taxi điện Nam Thắng</div>
+            </div>
+          </div>
+          <div class="reward-card">
+            <div class="reward-icon">📸</div>
+            <div>
+              <div class="reward-text-type">Chia sẻ khoảnh khắc hình ảnh</div>
+              <div class="reward-text-val">Voucher 300.000đ</div>
+              <div class="reward-text-desc">Magic Ticket đi Taxi điện Nam Thắng</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="checkin-steps">
+          <div class="checkin-step">
+            <div class="checkin-step-num">1</div>
+            <div class="checkin-step-text"><strong>Chụp ảnh / quay video</strong> sáng tạo cùng xe Nam Thắng Travel Bus</div>
+          </div>
+          <div class="checkin-step">
+            <div class="checkin-step-num">2</div>
+            <div class="checkin-step-text">
+              <strong>Đăng công khai</strong> Facebook hoặc TikTok kèm 5 hashtag:
+              <div class="hashtags">
+                <span class="hashtag">#NamThangTravelBus</span>
+                <span class="hashtag">#TaxiNamThang</span>
+                <span class="hashtag">#ChuyenXeThanhThoi</span>
+                <span class="hashtag">#XeXinMienTay</span>
+                <span class="hashtag">#SongAoTrenXe</span>
+              </div>
+            </div>
+          </div>
+          <div class="checkin-step">
+            <div class="checkin-step-num">3</div>
+            <div class="checkin-step-text"><strong>Điền thông tin</strong> bên cạnh & nhấn <strong style="color:var(--accent)">NHẬN MAGIC TICKET</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Form -->
+      <div class="checkin-form-wrap reveal" style="transition-delay:0.2s">
+        <div class="form-header">
+          <div class="form-header-icon">🎫</div>
+          <div>
+            <div class="form-header-title">Điền thông tin nhận thưởng</div>
+            <div class="form-header-sub">Miễn phí · Chỉ 1 phút · Nhận ngay qua App</div>
+          </div>
+        </div>
+
+        <div class="form-body">
+          <div class="checkin-notice">
+            <div class="checkin-notice-title">⚠️ Lưu ý quan trọng</div>
+            <ul>
+              <li>Magic Ticket xuất hiện trong App sau <strong>24h</strong></li>
+              <li>Áp dụng cho Taxi điện Nam Thắng tại các tỉnh <strong>Miền Tây</strong></li>
+              <li>Video: Voucher <strong>600K</strong> · Hình ảnh: Voucher <strong>300K</strong></li>
+            </ul>
+          </div>
+
+          <form id="checkinForm" novalidate>
+
+            <div class="field-group">
+              <label for="phone">Số điện thoại <span class="req">*</span></label>
+              <input type="tel" id="phone" name="phone" placeholder="09x xxxx xxxx"
+                inputmode="tel" maxlength="11" autocomplete="tel">
+              <div class="field-error" id="phone-error">Vui lòng nhập SĐT hợp lệ (VD: 0901234567)</div>
+            </div>
+
+            <div class="field-group">
+              <label for="name">Họ và tên <span class="req">*</span></label>
+              <input type="text" id="name" name="name" placeholder="Nguyễn Văn A" autocomplete="name">
+              <div class="field-error" id="name-error">Vui lòng nhập họ tên (ít nhất 2 ký tự)</div>
+            </div>
+
+            <div class="field-group">
+              <label for="social">Link bài đăng check-in <span class="req">*</span></label>
+              <input type="url" id="social" name="social" placeholder="https://www.facebook.com/...">
+              <div class="field-error" id="social-error">Vui lòng dán link bài đăng Facebook/TikTok</div>
+            </div>
+
+            <div class="field-group">
+              <label>Ảnh màn hình check-in <span class="req">*</span></label>
+              <div class="upload-zone" id="uploadZone">
+                <input type="file" id="photoInput" accept="image/*" multiple>
+                <div class="upload-icon">📸</div>
+                <div class="upload-title">Chụp màn hình hoặc chọn từ thư viện</div>
+                <div class="upload-desc">Có thể chọn nhiều ảnh · Tối đa 5 ảnh</div>
+              </div>
+              <div class="preview-grid" id="previewGrid"></div>
+              <div class="field-error" id="photo-error">Vui lòng thêm ít nhất 1 ảnh màn hình check-in</div>
+            </div>
+
+            <button type="submit" class="btn-submit-main" id="submitBtn">
+              <span class="btn-text">🎫 NHẬN MAGIC TICKET NGAY!</span>
+              <span class="btn-loading"><div class="spinner"></div> Đang gửi...</span>
+            </button>
+
+            <div class="privacy-note">
+              <span>🔒</span>
+              <p>Thông tin của bạn được bảo mật và chỉ dùng để gửi Magic Ticket. Nam Thắng cam kết không chia sẻ cho bên thứ ba.</p>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECTION 5 — FEEDBACK
+══════════════════════════════════════════ -->
+<section class="section-feedback" id="feedback">
+  <div class="container">
+    <div class="section-feedback-header reveal">
+      <div class="section-label">💬 Khách hàng nói gì</div>
+      <h2 class="section-title">Feedback vàng<br><span>hơn ngàn lời quảng cáo</span></h2>
+    </div>
+    <div class="feedback-grid">
+      <div class="feedback-card reveal" style="transition-delay:0.1s">
+        <div class="feedback-stars">★★★★★</div>
+        <p class="feedback-text">"Xe sạch sẽ, máy lạnh mát, tài xế thân thiện và chạy đúng giờ. Đoàn công ty mình đi Phú Quốc rất hài lòng, chắc chắn sẽ đặt lại!"</p>
+        <div class="feedback-author">
+          <div class="feedback-avatar">H</div>
+          <div>
+            <div class="feedback-name">Chị Hương Lan</div>
+            <div class="feedback-route">Đoàn TP.HCM – Phú Quốc</div>
+          </div>
+        </div>
+      </div>
+      <div class="feedback-card reveal" style="transition-delay:0.2s">
+        <div class="feedback-stars">★★★★★</div>
+        <p class="feedback-text">"Xe Limousine 29 chỗ thật sự ấn tượng! Ghế massage, wifi mạnh, cắm sạc thoải mái. Đi Đà Lạt mà thoải mái như đi máy bay vậy."</p>
+        <div class="feedback-author">
+          <div class="feedback-avatar">M</div>
+          <div>
+            <div class="feedback-name">Anh Minh Tuấn</div>
+            <div class="feedback-route">Đoàn Rạch Giá – Đà Lạt</div>
+          </div>
+        </div>
+      </div>
+      <div class="feedback-card reveal" style="transition-delay:0.3s">
+        <div class="feedback-stars">★★★★★</div>
+        <p class="feedback-text">"Mình đã đi nhiều lần với Nam Thắng rồi. Tài xế kinh nghiệm, không có cảm giác say xe dù đi đường núi. Rất yên tâm cho gia đình có trẻ nhỏ."</p>
+        <div class="feedback-author">
+          <div class="feedback-avatar">N</div>
+          <div>
+            <div class="feedback-name">Chị Nguyễn Hà</div>
+            <div class="feedback-route">Đoàn Rạch Giá – Đà Lạt</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECTION 6 — FAQ
+══════════════════════════════════════════ -->
+<section class="section-faq" id="faq">
+  <div class="container">
+    <div class="section-faq-header reveal">
+      <div class="section-label">❓ Giải đáp thắc mắc</div>
+      <h2 class="section-title">Câu hỏi thường gặp<br><span>khi đặt xe</span></h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <button class="faq-question">
+          Tôi cần đặt xe trước bao lâu?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">Bạn nên đặt xe trước ít nhất <strong>24–48 giờ</strong> để chúng tôi sắp xếp xe và tài xế phù hợp. Với các chuyến lớn hoặc dịp lễ, nên đặt sớm hơn 3–5 ngày để đảm bảo có xe ưng ý nhất.</div>
+      </div>
+      <div class="faq-item reveal" style="transition-delay:0.1s">
+        <button class="faq-question">
+          Nam Thắng Travel Bus phục vụ tuyến nào?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">Chúng tôi phục vụ toàn bộ khu vực <strong>Miền Tây</strong> và các tuyến liên tỉnh như TP.HCM – Miền Tây, các tỉnh đồng bằng sông Cửu Long – Đà Lạt, Phan Thiết, Nha Trang và nhiều tuyến khác theo yêu cầu.</div>
+      </div>
+      <div class="faq-item reveal" style="transition-delay:0.2s">
+        <button class="faq-question">
+          Giá thuê xe được tính như thế nào?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">Giá thuê xe tính theo <strong>km hoặc theo ngày</strong>, tùy loại xe và quãng đường. Vui lòng gọi hotline <strong>0923 098 098</strong> để được báo giá chi tiết và chính xác nhất cho chuyến đi của bạn.</div>
+      </div>
+      <div class="faq-item reveal" style="transition-delay:0.3s">
+        <button class="faq-question">
+          Magic Ticket là gì và dùng ở đâu?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">Magic Ticket là voucher giảm giá từ <strong>300K–600K</strong> dùng để đặt chuyến trên App Taxi Điện Nam Thắng. Áp dụng cho hệ thống taxi điện tại các tỉnh Miền Tây. Voucher sẽ xuất hiện trong mục <strong>Ưu Đãi</strong> của App sau 24h kể từ khi check-in thành công.</div>
+      </div>
+      <div class="faq-item reveal" style="transition-delay:0.4s">
+        <button class="faq-question">
+          Tôi có thể hủy hoặc đổi lịch xe không?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">Có thể. Vui lòng liên hệ hotline <strong>0923 098 098</strong> trước ít nhất <strong>12 giờ</strong> để thay đổi lịch mà không mất phí. Hủy sát giờ có thể phát sinh phí theo chính sách từng loại xe.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="#" class="nav-logo" style="margin-bottom:14px;display:inline-flex;">
+          <div class="nav-logo-icon">🚌</div>
+          <div class="nav-logo-text" style="color:white;">Nam Thắng<span>Travel Bus</span></div>
+        </a>
+        <p>Xe dịch vụ cao cấp tuyến Miền Tây. Đặt xe linh hoạt, tài xế kinh nghiệm, xe đời mới 2026.</p>
+        <div class="footer-social">
+          <a href="#" title="Facebook">📘</a>
+          <a href="#" title="TikTok">🎵</a>
+          <a href="https://zalo.me/0923098098" title="Zalo">💬</a>
+          <a href="tel:0923098098" title="Hotline">📞</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Liên hệ</div>
+        <ul>
+          <li><a href="tel:0923098098">📞 0923 098 098</a></li>
+          <li><a href="https://zalo.me/0923098098">💬 Zalo: 0923 098 098</a></li>
+          <li><a href="#">📘 Facebook Nam Thắng</a></li>
+          <li><a href="#">🎵 TikTok Nam Thắng</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Khám phá</div>
+        <ul>
+          <li><a href="#cars">Các dòng xe</a></li>
+          <li><a href="#why">Tại sao chọn chúng tôi</a></li>
+          <li><a href="#checkin">Nhận Magic Ticket</a></li>
+          <li><a href="#faq">Câu hỏi thường gặp</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2026 Nam Thắng Travel Bus · Hotline: 0923 098 098 · Tất cả quyền được bảo lưu
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════ -->
+<script>
+// ─── CONFIG ────────────────────────────────────────────────────────────────
+const SHEET_URL    = 'https://script.google.com/macros/s/AKfycbyTCJemuCStWejT8jyPi3qMYRySietpvCez8BKFLvjvX_jqGJCrUIO6PAG0Ag96Os6m/exec';
+const ANDROID_LINK = 'https://play.google.com/store/apps/details?id=vntaxi.namthang.passenger&pli=1';
+const IOS_LINK     = 'https://apps.apple.com/vn/app/taxi-nam-th%E1%BA%AFng/id6475762518?l=vi';
+
+// ─── OS DETECT ─────────────────────────────────────────────────────────────
 function detectOS(ua) {
   if (/android/i.test(ua)) return 'Android';
   if (/iPad|iPhone|iPod/.test(ua)) return 'iOS';
-  if (/Win/.test(ua)) return 'Windows';
-  if (/Mac/.test(ua)) return 'macOS';
-  if (/Linux/.test(ua)) return 'Linux';
-  return 'Khác';
+  return 'Other';
 }
-function detectBrowser(ua) {
-  if (/Chrome/.test(ua) && !/Edge/.test(ua) && !/OPR/.test(ua)) return 'Chrome';
-  if (/Firefox/.test(ua)) return 'Firefox';
-  if (/Safari/.test(ua) && !/Chrome/.test(ua)) return 'Safari';
-  if (/Edge/.test(ua)) return 'Edge';
-  if (/OPR/.test(ua)) return 'Opera';
-  if (/MSIE|Trident/.test(ua)) return 'Internet Explorer';
-  return 'Khác';
-}
-const _ua      = navigator.userAgent || 'Unknown';
-const _os      = detectOS(_ua);
-const _browser = detectBrowser(_ua);
+const _ua = navigator.userAgent || '';
+const _os = detectOS(_ua);
+const _appLink  = _os === 'iOS' ? IOS_LINK : ANDROID_LINK;
+const _appIcon  = _os === 'iOS' ? '🍎' : '🤖';
+const _appLabel = _os === 'iOS' ? 'Tải trên App Store' : 'Tải trên Google Play';
 
-// Set đúng link + icon store theo thiết bị
-const _appLink = (_os === 'iOS') ? IOS_LINK : ANDROID_LINK;
-const _appIcon = (_os === 'iOS') ? '🍎' : '🤖';
-const _appLabel = (_os === 'iOS')
-  ? 'Tải trên App Store'
-  : 'Tải trên Google Play';
-
-// Cập nhật nút tải app trong success screen
+// Apply to success btn
 const appLinkEl = document.getElementById('appLink');
 if (appLinkEl) {
   appLinkEl.href = _appLink;
-  const iconEl  = appLinkEl.querySelector('.app-icon');
-  const labelEl = appLinkEl.querySelector('.app-label');
-  if (iconEl)  iconEl.textContent  = _appIcon;
-  if (labelEl) labelEl.textContent = _appLabel;
+  const lbl = document.getElementById('appLabel');
+  if (lbl) lbl.textContent = _appLabel;
+  const icon = appLinkEl.querySelector('span:first-child');
+  if (icon) icon.textContent = _appIcon;
 }
 
-// Fallback redirect sau khi success screen hiện (2.5s)
 let _redirectTimer = null;
 function startAppRedirect() {
-  // Bắt đầu đếm ngược redirect — 5s để user đọc
-  _redirectTimer = setTimeout(() => {
-    window.location.href = _appLink;
-  }, 5000);
-  // Hiện nút fallback sau 6s phòng trường hợp bị chặn
+  _redirectTimer = setTimeout(() => { window.location.href = _appLink; }, 5000);
   setTimeout(() => {
     const fb = document.getElementById('fallbackBtn');
     if (fb) fb.style.display = 'flex';
   }, 6000);
 }
+document.getElementById('fallbackBtn').addEventListener('click', () => { window.location.href = _appLink; });
 
-// Fallback button handler
-document.addEventListener('DOMContentLoaded', () => {
-  const fb = document.getElementById('fallbackBtn');
-  if (fb) fb.addEventListener('click', () => { window.location.href = _appLink; });
+// ─── POPUP ─────────────────────────────────────────────────────────────────
+const popup = document.getElementById('popup');
+const popupClose = document.getElementById('popupClose');
+const popupCta   = document.getElementById('popupCta');
+
+setTimeout(() => { popup.style.display = 'flex'; }, 800);
+
+function closePopup() { popup.classList.add('hide'); }
+popupClose.addEventListener('click', closePopup);
+popup.addEventListener('click', (e) => { if (e.target === popup) closePopup(); });
+popupCta.addEventListener('click', (e) => {
+  e.preventDefault(); closePopup();
+  setTimeout(() => {
+    document.getElementById('checkin').scrollIntoView({ behavior: 'smooth' });
+  }, 200);
 });
 
-// Particles
-const pc = document.getElementById('particles');
-for (let i = 0; i < 18; i++) {
-  const p = document.createElement('div');
-  p.className = 'particle';
-  p.style.cssText = `left:${Math.random()*100}%;width:${2+Math.random()*4}px;height:${2+Math.random()*4}px;animation-duration:${6+Math.random()*10}s;animation-delay:${Math.random()*8}s;opacity:0`;
-  pc.appendChild(p);
-}
-
-// Phone formatting
-const phoneEl = document.getElementById('phone');
-phoneEl.addEventListener('input', () => {
-  let v = phoneEl.value.replace(/\D/g,'');
-  if (v.length > 10) v = v.slice(0,10);
-  phoneEl.value = v;
-  updateStep();
+// ─── NAVBAR SCROLL ─────────────────────────────────────────────────────────
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 50);
 });
 
-// Image upload
+// ─── REVEAL ON SCROLL ──────────────────────────────────────────────────────
+const revealEls = document.querySelectorAll('.reveal');
+const observer  = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.1 });
+revealEls.forEach(el => observer.observe(el));
+
+// ─── FAQ ───────────────────────────────────────────────────────────────────
+document.querySelectorAll('.faq-question').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const answer = btn.nextElementSibling;
+    const isOpen = answer.classList.contains('open');
+    document.querySelectorAll('.faq-answer.open').forEach(a => { a.classList.remove('open'); a.previousElementSibling.classList.remove('open'); });
+    if (!isOpen) { answer.classList.add('open'); btn.classList.add('open'); }
+  });
+});
+
+// ─── UPLOAD ────────────────────────────────────────────────────────────────
 let selectedFiles = [];
 const uploadZone  = document.getElementById('uploadZone');
 const photoInput  = document.getElementById('photoInput');
@@ -1007,18 +1615,13 @@ const previewGrid = document.getElementById('previewGrid');
 uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
 uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
 uploadZone.addEventListener('drop', e => { e.preventDefault(); uploadZone.classList.remove('drag-over'); handleFiles(e.dataTransfer.files); });
-
 photoInput.addEventListener('change', () => handleFiles(photoInput.files));
 
 function handleFiles(files) {
-  const arr = Array.from(files);
-  const remaining = 5 - selectedFiles.length;
-  const toAdd = arr.slice(0, remaining);
+  const toAdd = Array.from(files).slice(0, 5 - selectedFiles.length);
   selectedFiles = [...selectedFiles, ...toAdd];
   renderPreviews();
-  updateStep();
 }
-
 function renderPreviews() {
   previewGrid.innerHTML = '';
   selectedFiles.forEach((file, i) => {
@@ -1029,148 +1632,97 @@ function renderPreviews() {
     previewGrid.appendChild(div);
   });
   previewGrid.querySelectorAll('.preview-remove').forEach(btn => {
-    btn.addEventListener('click', () => {
-      selectedFiles.splice(+btn.dataset.i, 1);
-      renderPreviews();
-      updateStep();
-    });
+    btn.addEventListener('click', () => { selectedFiles.splice(+btn.dataset.i, 1); renderPreviews(); });
   });
-  if (selectedFiles.length >= 5) uploadZone.style.display = 'none';
-  else uploadZone.style.display = '';
+  uploadZone.style.display = selectedFiles.length >= 5 ? 'none' : '';
 }
 
-// Steps indicator
-function updateStep() {
-  const hasPhone = phoneEl.value.length >= 9;
-  const hasName  = document.getElementById('name').value.trim().length > 1;
-  const hasPhoto = selectedFiles.length > 0;
+// ─── FORM ──────────────────────────────────────────────────────────────────
+const phoneEl = document.getElementById('phone');
+phoneEl.addEventListener('input', () => {
+  phoneEl.value = phoneEl.value.replace(/\D/g,'').slice(0,11);
+});
 
-  setStep(1, hasPhone && hasName, hasPhone && hasName && hasPhoto);
-  setStep(2, hasPhoto, hasPhoto && hasPhone && hasName);
+function showErr(id) { document.getElementById(id).classList.add('show'); }
+function hideErr(id) { document.getElementById(id).classList.remove('show'); }
+function showToast(msg, err=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast show' + (err?' err':'');
+  setTimeout(() => { t.className = 'toast'+(err?' err':''); }, 3500);
 }
-document.getElementById('name').addEventListener('input', updateStep);
-
-function setStep(n, done, next) {
-  const c = document.getElementById(`step${n}c`);
-  const l = document.getElementById(`step${n}l`);
-  if (done) { c.className='step-circle done'; l.className='step-label done'; c.textContent='✓'; }
-  if (n===1 && !done) { c.className='step-circle active'; l.className='step-label active'; c.textContent='1'; }
-  if (n===2 && !done && next===false) { }
-  const con = document.getElementById(`con${n}`);
-  if (con) con.className = 'step-connector' + (done ? ' done' : '');
-}
-
-// Convert file to base64
 function toBase64(file) {
   return new Promise((res, rej) => {
     const r = new FileReader();
     r.onload = () => res(r.result.split(',')[1]);
-    r.onerror = rej;
-    r.readAsDataURL(file);
+    r.onerror = rej; r.readAsDataURL(file);
   });
 }
-
-// Validation
 function validate() {
   let ok = true;
   const phone = phoneEl.value.replace(/\D/g,'');
-  if (!/^0\d{8,9}$/.test(phone)) {
-    showErr('phone-error'); phoneEl.classList.add('error'); ok = false;
-  } else { hideErr('phone-error'); phoneEl.classList.remove('error'); }
-
-  const name = document.getElementById('name').value.trim();
-  if (name.length < 2) {
-    showErr('name-error'); document.getElementById('name').classList.add('error'); ok = false;
-  } else { hideErr('name-error'); document.getElementById('name').classList.remove('error'); }
-
-  if (selectedFiles.length === 0) { showErr('photo-error'); ok = false; }
-  else hideErr('photo-error');
-
+  if (!/^0\d{8,9}$/.test(phone)) { showErr('phone-error'); ok = false; } else hideErr('phone-error');
+  if (document.getElementById('name').value.trim().length < 2) { showErr('name-error'); ok = false; } else hideErr('name-error');
+  const social = document.getElementById('social').value.trim();
+  if (!social) { showErr('social-error'); ok = false; } else hideErr('social-error');
+  if (selectedFiles.length === 0) { showErr('photo-error'); ok = false; } else hideErr('photo-error');
   return ok;
 }
-function showErr(id) { document.getElementById(id).classList.add('show'); }
-function hideErr(id) { document.getElementById(id).classList.remove('show'); }
 
-// Toast
-function showToast(msg, isErr=false) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show' + (isErr ? ' error-toast' : '');
-  setTimeout(() => t.className = 'toast' + (isErr?' error-toast':''), 3000);
-}
-
-// Confetti
 function launchConfetti() {
-  const colors = ['#AEEA00','#76FF03','#CCFF90','#FF6F00','#FFD740','#ffffff'];
+  const colors = ['#8BC34A','#558B2F','#C5E1A5','#E53935','#F9A825','#ffffff'];
   for (let i = 0; i < 60; i++) {
     setTimeout(() => {
       const el = document.createElement('div');
       el.className = 'confetti-piece';
-      el.style.cssText = `left:${Math.random()*100}vw;background:${colors[~~(Math.random()*colors.length)]};animation-duration:${1.5+Math.random()*2.5}s;animation-delay:0s;transform:rotate(${Math.random()*360}deg)`;
+      el.style.cssText = `left:${Math.random()*100}vw;background:${colors[~~(Math.random()*colors.length)]};animation-duration:${1.5+Math.random()*2.5}s;transform:rotate(${Math.random()*360}deg)`;
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 4000);
-    }, i*30);
+    }, i * 30);
   }
 }
 
-// SUBMIT
 document.getElementById('checkinForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   if (!validate()) return;
 
   const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  btn.classList.add('loading');
+  btn.disabled = true; btn.classList.add('loading');
 
   try {
-    // Convert images to base64
     const images = await Promise.all(selectedFiles.map(f => toBase64(f)));
-
     const payload = {
-      phone:    phoneEl.value.replace(/\D/g,''),
-      name:     document.getElementById('name').value.trim(),
-      social:   document.getElementById('social').value.trim(),
-      images:   images, // array of base64 strings
-      timestamp: new Date().toLocaleString('vi-VN', {timeZone:'Asia/Ho_Chi_Minh'}),
-      route:    document.referrer || 'Direct QR'
+      phone:     phoneEl.value.replace(/\D/g,''),
+      name:      document.getElementById('name').value.trim(),
+      social:    document.getElementById('social').value.trim(),
+      images:    images,
+      timestamp: new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }),
+      route:     'Landing Page – ' + (_os || 'Web')
     };
 
-    // Google Apps Script yêu cầu no-cors — không đọc được response body
-    // nên coi như thành công ngay sau khi fetch không throw
     await fetch(SHEET_URL, {
-      method: 'POST',
-      mode: 'no-cors',
+      method: 'POST', mode: 'no-cors',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(payload)
     });
 
-    // Success!
     launchConfetti();
     setTimeout(() => {
       document.getElementById('successScreen').classList.add('show');
-      // Countdown 3 → 2 → 1 rồi redirect đúng store
       let cd = 5;
       const cdEl = document.getElementById('cdNum');
       if (cdEl) cdEl.textContent = cd;
-      const cdInterval = setInterval(() => {
-        cd--;
-        if (cdEl) cdEl.textContent = cd;
-        if (cd <= 0) clearInterval(cdInterval);
-      }, 1000);
+      const iv = setInterval(() => { cd--; if (cdEl) cdEl.textContent = cd; if (cd <= 0) clearInterval(iv); }, 1000);
       startAppRedirect();
     }, 400);
-
-    // Step 3 done
-    document.getElementById('step3c').className = 'step-circle done';
-    document.getElementById('step3c').textContent = '✓';
 
   } catch (err) {
     console.error(err);
     showToast('⚠️ Có lỗi xảy ra. Vui lòng thử lại!', true);
-    btn.disabled = false;
-    btn.classList.remove('loading');
+    btn.disabled = false; btn.classList.remove('loading');
   }
 });
 </script>
+
 </body>
 </html>
+HTMLEOF
