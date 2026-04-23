@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Check-in & Nhận Magic Ticket | Nam Thắng Travel Bus</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --lime: #AEEA00;
+    --lime-dark: #7CB800;
+    --lime-light: #DEFF7A;
+    --lime-pale: #F4FFD0;
+    --green: #1B5E20;
+    --green-mid: #2E7D32;
+    --white: #FFFFFF;
+    --gray: #F5F5F5;
+    --text: #1a1a1a;
+    --text-muted: #666;
+    --orange: #FF6F00;
+    --radius: 18px;
+    --radius-sm: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #0d1f0d;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* === ANIMATED BACKGROUND === */
+  .bg-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .bg-layer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 20% 0%, #1a3d0a 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 100%, #0f2d05 0%, transparent 60%),
+                linear-gradient(160deg, #0d1f0d 0%, #0a1a08 100%);
+  }
+
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.25;
+    animation: blobFloat 8s ease-in-out infinite;
+  }
+  .blob-1 { width: 300px; height: 300px; background: #AEEA00; top: -80px; left: -60px; animation-delay: 0s; }
+  .blob-2 { width: 200px; height: 200px; background: #76FF03; top: 40%; right: -50px; animation-delay: -3s; }
+  .blob-3 { width: 150px; height: 150px; background: #CCFF90; bottom: 10%; left: 10%; animation-delay: -5s; }
+
+  @keyframes blobFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(15px, -20px) scale(1.05); }
+    66% { transform: translate(-10px, 10px) scale(0.95); }
+  }
+
+  /* Floating particles */
+  .particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+  .particle {
+    position: absolute;
+    width: 4px; height: 4px;
+    background: var(--lime);
+    border-radius: 50%;
+    opacity: 0;
+    animation: particleRise linear infinite;
+  }
+  @keyframes particleRise {
+    0% { opacity: 0; transform: translateY(0) scale(0); }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.2; }
+    100% { opacity: 0; transform: translateY(-100vh) scale(0.3); }
+  }
+
+  /* === MAIN CONTAINER === */
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 0 40px;
+  }
+
+  /* === HEADER === */
+  .header {
+    text-align: center;
+    padding: 36px 24px 28px;
+    position: relative;
+  }
+
+  .logo-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(174,234,0,0.12);
+    border: 1px solid rgba(174,234,0,0.3);
+    border-radius: 50px;
+    padding: 8px 18px;
+    margin-bottom: 20px;
+  }
+  .logo-dot {
+    width: 10px; height: 10px;
+    background: var(--lime);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(174,234,0,0.4); }
+    50% { transform: scale(1.2); box-shadow: 0 0 0 8px rgba(174,234,0,0); }
+  }
+  .logo-text {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--lime);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .header-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--orange), #FF8F00);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+  @keyframes shimmer {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,111,0,0.3); }
+    50% { box-shadow: 0 0 20px 4px rgba(255,111,0,0.5); }
+  }
+
+  .header h1 {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: clamp(28px, 8vw, 36px);
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+  .header h1 span {
+    color: var(--lime);
+    display: block;
+    font-size: clamp(32px, 9vw, 42px);
+  }
+
+  .header-sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.6;
+    max-width: 300px;
+    margin: 0 auto 24px;
+  }
+
+  /* Steps bar */
+  .steps-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: 0 24px;
+    margin-bottom: 8px;
+  }
+  .step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+  }
+  /* Step circle — base */
+  .step-circle {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(174,234,0,0.08);
+    border: 2px solid rgba(174,234,0,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    color: rgba(255,255,255,0.3);
+    transition: all 0.45s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative;
+  }
+  /* Active: pulse ring */
+  .step-circle.active {
+    background: var(--lime);
+    border-color: var(--lime);
+    color: var(--green);
+    box-shadow: 0 0 0 0 rgba(174,234,0,0.55);
+    animation: stepPulse 2s ease-out infinite;
+  }
+  @keyframes stepPulse {
+    0%   { box-shadow: 0 0 0 0   rgba(174,234,0,0.55); }
+    60%  { box-shadow: 0 0 0 10px rgba(174,234,0,0); }
+    100% { box-shadow: 0 0 0 0   rgba(174,234,0,0); }
+  }
+  /* Done: checkmark pop */
+  .step-circle.done {
+    background: rgba(174,234,0,0.18);
+    border-color: var(--lime);
+    color: var(--lime);
+    box-shadow: 0 0 12px rgba(174,234,0,0.3);
+    animation: stepDonePop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes stepDonePop {
+    0%   { transform: scale(0.7); opacity: 0.5; }
+    100% { transform: scale(1);   opacity: 1; }
+  }
+  .step-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.3);
+    text-align: center;
+    letter-spacing: 0.3px;
+    transition: color 0.3s;
+  }
+  .step-label.active {
+    color: var(--lime);
+    text-shadow: 0 0 8px rgba(174,234,0,0.5);
+  }
+  .step-label.done { color: rgba(174,234,0,0.7); }
+  /* Connector — fill animation */
+  .step-connector {
+    height: 2px;
+    flex: 1;
+    background: rgba(174,234,0,0.12);
+    margin-bottom: 22px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 2px;
+  }
+  .step-connector::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, var(--lime-dark), var(--lime));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.6s cubic-bezier(0.65,0,0.35,1);
+    border-radius: 2px;
+  }
+  .step-connector.done::after { transform: scaleX(1); }
+
+  /* === INFO CARDS === */
+  .info-cards {
+    display: flex;
+    gap: 10px;
+    padding: 16px 20px 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .info-cards::-webkit-scrollbar { display: none; }
+
+  /* Staggered fade-in on load */
+  .info-card {
+    min-width: 140px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(174,234,0,0.15);
+    border-radius: 14px;
+    padding: 14px;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    animation: cardFadeIn 0.5s both;
+  }
+  .info-card:nth-child(1) { animation-delay: 0.1s; }
+  .info-card:nth-child(2) { animation-delay: 0.22s; }
+  .info-card:nth-child(3) { animation-delay: 0.34s; }
+  .info-card:nth-child(4) { animation-delay: 0.46s; }
+  @keyframes cardFadeIn {
+    from { opacity: 0; transform: translateY(14px) scale(0.95); }
+    to   { opacity: 1; transform: translateY(0)    scale(1); }
+  }
+  /* Shimmer sweep */
+  .info-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%; height: 100%;
+    background: linear-gradient(105deg,
+      transparent 30%,
+      rgba(174,234,0,0.08) 50%,
+      transparent 70%);
+    animation: cardShimmer 3.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .info-card:nth-child(2)::before { animation-delay: 0.8s; }
+  .info-card:nth-child(3)::before { animation-delay: 1.6s; }
+  .info-card:nth-child(4)::before { animation-delay: 2.4s; }
+  @keyframes cardShimmer {
+    0%   { left: -100%; }
+    40%  { left: 160%; }
+    100% { left: 160%; }
+  }
+  /* Hover */
+  .info-card:active {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 24px rgba(174,234,0,0.15);
+    border-color: rgba(174,234,0,0.4);
+  }
+  /* Icon bounce */
+  .info-card-icon {
+    font-size: 22px;
+    margin-bottom: 8px;
+    display: inline-block;
+    animation: iconBounce 3s ease-in-out infinite;
+  }
+  .info-card:nth-child(2) .info-card-icon { animation-delay: 0.4s; }
+  .info-card:nth-child(3) .info-card-icon { animation-delay: 0.8s; }
+  .info-card:nth-child(4) .info-card-icon { animation-delay: 1.2s; }
+  @keyframes iconBounce {
+    0%, 100% { transform: translateY(0); }
+    45%      { transform: translateY(-4px); }
+    55%      { transform: translateY(-4px); }
+  }
+  .info-card-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--lime);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .info-card-desc {
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.4;
+  }
+
+  /* === FORM CARD === */
+  .form-card {
+    margin: 20px 16px 0;
+    background: var(--white);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(174,234,0,0.15);
+  }
+
+  .form-card-header {
+    background: linear-gradient(135deg, var(--green) 0%, #2e5e0e 100%);
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .form-card-icon {
+    width: 44px; height: 44px;
+    background: var(--lime);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .form-card-title {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+  }
+  .form-card-subtitle {
+    font-size: 12px;
+    color: rgba(255,255,255,0.65);
+    margin-top: 2px;
+  }
+
+  .form-body { padding: 24px; }
+
+  .field-group { margin-bottom: 20px; }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: 0.2px;
+  }
+  label .req { color: #e53935; margin-left: 3px; }
+  label .opt {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: #f0f0f0;
+    padding: 2px 7px;
+    border-radius: 10px;
+    margin-left: 6px;
+  }
+
+  input[type="tel"], input[type="text"], input[type="url"] {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e8e8e8;
+    border-radius: var(--radius-sm);
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--gray);
+    transition: all 0.25s ease;
+    outline: none;
+    -webkit-appearance: none;
+  }
+  input:focus {
+    border-color: var(--lime-dark);
+    background: var(--white);
+    box-shadow: 0 0 0 4px rgba(174,234,0,0.15);
+  }
+  input.error { border-color: #e53935; background: #fff5f5; }
+  input.valid { border-color: #43a047; }
+
+  .field-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 5px;
+    line-height: 1.4;
+  }
+  .field-error {
+    font-size: 11px;
+    color: #e53935;
+    margin-top: 5px;
+    display: none;
+  }
+  .field-error.show { display: block; }
+
+  /* Upload zone */
+  .upload-zone {
+    border: 2px dashed #d0e8a0;
+    border-radius: var(--radius-sm);
+    background: #f8fff0;
+    padding: 24px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+  }
+  .upload-zone:hover, .upload-zone.drag-over {
+    border-color: var(--lime-dark);
+    background: var(--lime-pale);
+  }
+  .upload-zone input[type="file"] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer;
+    width: 100%; height: 100%;
+    border: none; padding: 0; background: none; box-shadow: none;
+  }
+  .upload-icon { font-size: 36px; margin-bottom: 8px; }
+  .upload-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--green-mid);
+    margin-bottom: 4px;
+  }
+  .upload-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* Preview grid */
+  .preview-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .preview-item {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #eee;
+  }
+  .preview-item img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .preview-remove {
+    position: absolute;
+    top: 4px; right: 4px;
+    width: 22px; height: 22px;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+  }
+
+  /* Submit btn */
+  .btn-submit {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, #AEEA00, #76C200);
+    color: var(--green);
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.3px;
+    position: relative;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .btn-submit::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .btn-submit:hover::after { opacity: 1; }
+  .btn-submit:active { transform: scale(0.98); }
+  .btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn-submit .btn-loading { display: none; }
+  .btn-submit.loading .btn-text { display: none; }
+  .btn-submit.loading .btn-loading { display: inline-flex; align-items: center; gap: 8px; }
+
+  .spinner {
+    width: 18px; height: 18px;
+    border: 3px solid rgba(27,94,32,0.3);
+    border-top-color: var(--green);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .privacy-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    background: #f8fff0;
+    border: 1px solid #d0e8a0;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-top: 16px;
+  }
+  .privacy-note span { font-size: 16px; flex-shrink: 0; }
+  .privacy-note p { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+
+  /* === SUCCESS SCREEN === */
+  .success-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: linear-gradient(160deg, #0d1f0d, #0a2a05);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px;
+    text-align: center;
+  }
+  .success-screen.show { display: flex; }
+
+  .success-lottie {
+    width: 120px; height: 120px;
+    background: linear-gradient(135deg, var(--lime), var(--lime-dark));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 56px;
+    margin-bottom: 28px;
+    animation: successPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 0 60px rgba(174,234,0,0.4);
+  }
+  @keyframes successPop {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .success-title {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--white);
+    margin-bottom: 8px;
+    animation: fadeUp 0.5s 0.2s both;
+  }
+  .success-sub {
+    font-size: 15px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.6;
+    margin-bottom: 32px;
+    animation: fadeUp 0.5s 0.35s both;
+    max-width: 300px;
+  }
+  @keyframes fadeUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .ticket-badge {
+    background: rgba(174,234,0,0.1);
+    border: 2px solid rgba(174,234,0,0.3);
+    border-radius: 20px;
+    padding: 20px 28px;
+    margin-bottom: 28px;
+    animation: fadeUp 0.5s 0.5s both;
+  }
+  .ticket-badge-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--lime);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .ticket-badge-val {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--white);
+  }
+
+  .btn-download-app {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--lime);
+    color: var(--green);
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+    padding: 18px 32px;
+    border-radius: 14px;
+    text-decoration: none;
+    margin-bottom: 16px;
+    width: 100%;
+    max-width: 320px;
+    justify-content: center;
+    animation: fadeUp 0.5s 0.65s both;
+    box-shadow: 0 8px 30px rgba(174,234,0,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .btn-download-app:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(174,234,0,0.4);
+  }
+  .btn-download-app .app-icon { font-size: 24px; }
+
+  .success-footnote {
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+    animation: fadeUp 0.5s 0.8s both;
+    line-height: 1.5;
+  }
+
+  /* Countdown & fallback */
+  .redirect-countdown {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 14px;
+    animation: fadeUp 0.5s 0.5s both;
+  }
+  .redirect-countdown span { color: var(--lime); font-weight: 800; }
+
+  .btn-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.55);
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 100px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 320px;
+    transition: all 0.2s;
+  }
+  .btn-fallback:hover { border-color: var(--lime); color: var(--lime); }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #1a1a1a;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    z-index: 200;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    white-space: nowrap;
+    max-width: 90vw;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.error-toast { background: #c62828; }
+
+  /* === FOOTER === */
+  .footer {
+    text-align: center;
+    padding: 24px 20px;
+    color: rgba(255,255,255,0.25);
+    font-size: 11px;
+    line-height: 1.7;
+  }
+
+  /* Confetti */
+  .confetti-piece {
+    position: fixed;
+    width: 8px; height: 8px;
+    top: -10px;
+    border-radius: 2px;
+    z-index: 150;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall {
+    to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-layer">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<div class="particles" id="particles"></div>
+
+<!-- SUCCESS SCREEN -->
+<div class="success-screen" id="successScreen">
+  <div class="success-lottie">🎉</div>
+  <div class="success-title">Check-in thành công!</div>
+  <div class="success-sub">Cảm ơn bạn đã tham gia chiến dịch <strong style="color:var(--lime)">Nối Tiếp Thảnh Thơi</strong>. Magic Ticket đang chờ bạn trong app!</div>
+
+  <div class="ticket-badge">
+    <div class="ticket-badge-title">🎫 Phần thưởng của bạn</div>
+    <div class="ticket-badge-val">Magic Ticket – Taxi Điện</div>
+  </div>
+
+  <p class="redirect-countdown" id="redirectCountdown">
+    ⏳ Tự động chuyển đến store sau <span id="cdNum">5</span> giây...
+  </p>
+
+  <a href="#" class="btn-download-app" id="appLink" target="_blank">
+    <span class="app-icon">📱</span>
+    <span class="app-label">Tải App Taxi Điện Nam Thắng</span>
+  </a>
+
+  <button class="btn-fallback" id="fallbackBtn" style="display:none">
+    Nhấn đây nếu chưa được chuyển trang →
+  </button>
+
+  <p class="success-footnote">
+    Mở app → Mục Ưu Đãi → Dùng Magic Ticket<br>
+    để book chuyến đi ngay!
+  </p>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<div class="container">
+  <!-- HEADER -->
+  <div class="header">
+    <a href="index.html" style="text-decoration:none"><div class="logo-wrap">
+      <div class="logo-dot"></div>
+      <span class="logo-text">Nam Thắng Travel Bus</span>
+    </div></a>
+
+    <div>
+      <span class="header-badge">🚌 Chiến dịch đặc biệt</span>
+    </div>
+
+    <h1>Check-in ngay<span>Quà liền tay!</span></h1>
+    <p class="header-sub">Chụp ảnh trên xe, điền thông tin và nhận ngay <strong style="color:var(--lime-light)">Magic Ticket</strong> miễn phí đi taxi điện Nam Thắng.</p>
+  </div>
+
+  <!-- STEPS -->
+  <div class="steps-bar">
+    <div class="step-item">
+      <div class="step-circle active" id="step1c">1</div>
+      <div class="step-label active" id="step1l">Điền info</div>
+    </div>
+    <div class="step-connector" id="con1"></div>
+    <div class="step-item">
+      <div class="step-circle" id="step2c">2</div>
+      <div class="step-label" id="step2l">Ảnh check-in</div>
+    </div>
+    <div class="step-connector" id="con2"></div>
+    <div class="step-item">
+      <div class="step-circle" id="step3c">3</div>
+      <div class="step-label" id="step3l">Nhận thưởng</div>
+    </div>
+  </div>
+
+  <!-- INFO CARDS -->
+  <div class="info-cards">
+    <div class="info-card">
+      <div class="info-card-icon">🎟️</div>
+      <div class="info-card-title">Magic Ticket</div>
+      <div class="info-card-desc">Voucher giảm giá chuyến taxi điện</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">⚡</div>
+      <div class="info-card-title">Tức thì</div>
+      <div class="info-card-desc">Nhận ngay qua app sau khi check-in</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">🌿</div>
+      <div class="info-card-title">Xanh & Sạch</div>
+      <div class="info-card-desc">Taxi điện thân thiện môi trường</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">🛣️</div>
+      <div class="info-card-title">Miền Tây</div>
+      <div class="info-card-desc">Áp dụng tại điểm đến miền Tây</div>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-card">
+    <div class="form-card-header">
+      <div class="form-card-icon">📋</div>
+      <div>
+        <div class="form-card-title">Thông tin check-in</div>
+        <div class="form-card-subtitle">3 bước đơn giản – nhận quà ngay!</div>
+      </div>
+    </div>
+
+    <div class="form-body">
+      <form id="checkinForm" novalidate>
+
+        <!-- SĐT -->
+        <div class="field-group">
+          <label for="phone">Số điện thoại <span class="req">*</span></label>
+          <input type="tel" id="phone" name="phone" placeholder="09x xxxx xxxx"
+            inputmode="tel" maxlength="11" autocomplete="tel">
+          <div class="field-hint">Dùng SĐT đã đăng ký / sẽ đăng ký app Taxi Nam Thắng</div>
+          <div class="field-error" id="phone-error">Vui lòng nhập số điện thoại hợp lệ</div>
+        </div>
+
+        <!-- Họ tên -->
+        <div class="field-group">
+          <label for="name">Họ và tên <span class="req">*</span></label>
+          <input type="text" id="name" name="name" placeholder="Nguyễn Văn A"
+            autocomplete="name">
+          <div class="field-error" id="name-error">Vui lòng nhập họ tên</div>
+        </div>
+
+        <!-- Link FB/TikTok (optional) -->
+        <div class="field-group">
+          <label for="social">Link bài đăng Facebook / TikTok <span class="opt">Tùy chọn</span></label>
+          <input type="url" id="social" name="social"
+            placeholder="https://www.facebook.com/...">
+          <div class="field-hint">Nếu bạn đã đăng bài check-in, dán link vào đây để tăng cơ hội nhận thêm quà 🎁</div>
+        </div>
+
+        <!-- Ảnh check-in -->
+        <div class="field-group">
+          <label>Ảnh check-in trên xe <span class="req">*</span></label>
+          <div class="upload-zone" id="uploadZone">
+            <input type="file" id="photoInput" accept="image/*" multiple capture="environment">
+            <div class="upload-icon">📸</div>
+            <div class="upload-title">Chụp ảnh hoặc chọn từ thư viện</div>
+            <div class="upload-desc">Có thể chọn nhiều ảnh • JPG, PNG • Tối đa 5 ảnh</div>
+          </div>
+          <div class="preview-grid" id="previewGrid"></div>
+          <div class="field-error" id="photo-error">Vui lòng thêm ít nhất 1 ảnh check-in</div>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <span class="btn-text">🎫 Nhận Magic Ticket ngay!</span>
+          <span class="btn-loading"><div class="spinner"></div> Đang gửi...</span>
+        </button>
+
+        <div class="privacy-note">
+          <span>🔒</span>
+          <p>Thông tin của bạn được bảo mật và chỉ dùng để gửi Magic Ticket. Không chia sẻ cho bên thứ ba.</p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="footer">
+    <a href="index.html" style="color:rgba(255,255,255,0.4);text-decoration:none">← Về trang chủ</a> · Nam Thắng Travel Bus · Chiến dịch Hè Thảnh Thơi<br>
+    #HeThanhThoi #NamThangTravelBus #TaxiNamThang
+  </div>
+</div>
+
+<script>
+// ─── CONFIG ────────────────────────────────
+// Thay YOUR_SCRIPT_ID bằng Web App ID của Google Apps Script
+const SHEET_URL     = 'https://script.google.com/macros/s/AKfycbyTCJemuCStWejT8jyPi3qMYRySietpvCez8BKFLvjvX_jqGJCrUIO6PAG0Ag96Os6m/exec';
+const ANDROID_LINK  = 'https://play.google.com/store/apps/details?id=vntaxi.namthang.passenger&pli=1';
+const IOS_LINK      = 'https://apps.apple.com/vn/app/taxi-nam-th%E1%BA%AFng/id6475762518?l=vi';
+// ───────────────────────────────────────────
+
+// ─── OS / BROWSER DETECTION (theo script gốc) ─────────────────────────────
+function detectOS(ua) {
+  if (/android/i.test(ua)) return 'Android';
+  if (/iPad|iPhone|iPod/.test(ua)) return 'iOS';
+  if (/Win/.test(ua)) return 'Windows';
+  if (/Mac/.test(ua)) return 'macOS';
+  if (/Linux/.test(ua)) return 'Linux';
+  return 'Khác';
+}
+function detectBrowser(ua) {
+  if (/Chrome/.test(ua) && !/Edge/.test(ua) && !/OPR/.test(ua)) return 'Chrome';
+  if (/Firefox/.test(ua)) return 'Firefox';
+  if (/Safari/.test(ua) && !/Chrome/.test(ua)) return 'Safari';
+  if (/Edge/.test(ua)) return 'Edge';
+  if (/OPR/.test(ua)) return 'Opera';
+  if (/MSIE|Trident/.test(ua)) return 'Internet Explorer';
+  return 'Khác';
+}
+const _ua      = navigator.userAgent || 'Unknown';
+const _os      = detectOS(_ua);
+const _browser = detectBrowser(_ua);
+
+// Set đúng link + icon store theo thiết bị
+const _appLink = (_os === 'iOS') ? IOS_LINK : ANDROID_LINK;
+const _appIcon = (_os === 'iOS') ? '🍎' : '🤖';
+const _appLabel = (_os === 'iOS')
+  ? 'Tải trên App Store'
+  : 'Tải trên Google Play';
+
+// Cập nhật nút tải app trong success screen
+const appLinkEl = document.getElementById('appLink');
+if (appLinkEl) {
+  appLinkEl.href = _appLink;
+  const iconEl  = appLinkEl.querySelector('.app-icon');
+  const labelEl = appLinkEl.querySelector('.app-label');
+  if (iconEl)  iconEl.textContent  = _appIcon;
+  if (labelEl) labelEl.textContent = _appLabel;
+}
+
+// Fallback redirect sau khi success screen hiện (2.5s)
+let _redirectTimer = null;
+function startAppRedirect() {
+  // Bắt đầu đếm ngược redirect — 5s để user đọc
+  _redirectTimer = setTimeout(() => {
+    window.location.href = _appLink;
+  }, 5000);
+  // Hiện nút fallback sau 6s phòng trường hợp bị chặn
+  setTimeout(() => {
+    const fb = document.getElementById('fallbackBtn');
+    if (fb) fb.style.display = 'flex';
+  }, 6000);
+}
+
+// Fallback button handler
+document.addEventListener('DOMContentLoaded', () => {
+  const fb = document.getElementById('fallbackBtn');
+  if (fb) fb.addEventListener('click', () => { window.location.href = _appLink; });
+});
+
+// Particles
+const pc = document.getElementById('particles');
+for (let i = 0; i < 18; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.style.cssText = `left:${Math.random()*100}%;width:${2+Math.random()*4}px;height:${2+Math.random()*4}px;animation-duration:${6+Math.random()*10}s;animation-delay:${Math.random()*8}s;opacity:0`;
+  pc.appendChild(p);
+}
+
+// Phone formatting
+const phoneEl = document.getElementById('phone');
+phoneEl.addEventListener('input', () => {
+  let v = phoneEl.value.replace(/\D/g,'');
+  if (v.length > 10) v = v.slice(0,10);
+  phoneEl.value = v;
+  updateStep();
+});
+
+// Image upload
+let selectedFiles = [];
+const uploadZone  = document.getElementById('uploadZone');
+const photoInput  = document.getElementById('photoInput');
+const previewGrid = document.getElementById('previewGrid');
+
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop', e => { e.preventDefault(); uploadZone.classList.remove('drag-over'); handleFiles(e.dataTransfer.files); });
+
+photoInput.addEventListener('change', () => handleFiles(photoInput.files));
+
+function handleFiles(files) {
+  const arr = Array.from(files);
+  const remaining = 5 - selectedFiles.length;
+  const toAdd = arr.slice(0, remaining);
+  selectedFiles = [...selectedFiles, ...toAdd];
+  renderPreviews();
+  updateStep();
+}
+
+function renderPreviews() {
+  previewGrid.innerHTML = '';
+  selectedFiles.forEach((file, i) => {
+    const url = URL.createObjectURL(file);
+    const div = document.createElement('div');
+    div.className = 'preview-item';
+    div.innerHTML = `<img src="${url}" alt="ảnh ${i+1}"><button class="preview-remove" data-i="${i}" type="button">×</button>`;
+    previewGrid.appendChild(div);
+  });
+  previewGrid.querySelectorAll('.preview-remove').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedFiles.splice(+btn.dataset.i, 1);
+      renderPreviews();
+      updateStep();
+    });
+  });
+  if (selectedFiles.length >= 5) uploadZone.style.display = 'none';
+  else uploadZone.style.display = '';
+}
+
+// Steps indicator
+function updateStep() {
+  const hasPhone = phoneEl.value.length >= 9;
+  const hasName  = document.getElementById('name').value.trim().length > 1;
+  const hasPhoto = selectedFiles.length > 0;
+
+  setStep(1, hasPhone && hasName, hasPhone && hasName && hasPhoto);
+  setStep(2, hasPhoto, hasPhoto && hasPhone && hasName);
+}
+document.getElementById('name').addEventListener('input', updateStep);
+
+function setStep(n, done, next) {
+  const c = document.getElementById(`step${n}c`);
+  const l = document.getElementById(`step${n}l`);
+  if (done) { c.className='step-circle done'; l.className='step-label done'; c.textContent='✓'; }
+  if (n===1 && !done) { c.className='step-circle active'; l.className='step-label active'; c.textContent='1'; }
+  if (n===2 && !done && next===false) { }
+  const con = document.getElementById(`con${n}`);
+  if (con) con.className = 'step-connector' + (done ? ' done' : '');
+}
+
+// Convert file to base64
+function toBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(',')[1]);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+// Validation
+function validate() {
+  let ok = true;
+  const phone = phoneEl.value.replace(/\D/g,'');
+  if (!/^0\d{8,9}$/.test(phone)) {
+    showErr('phone-error'); phoneEl.classList.add('error'); ok = false;
+  } else { hideErr('phone-error'); phoneEl.classList.remove('error'); }
+
+  const name = document.getElementById('name').value.trim();
+  if (name.length < 2) {
+    showErr('name-error'); document.getElementById('name').classList.add('error'); ok = false;
+  } else { hideErr('name-error'); document.getElementById('name').classList.remove('error'); }
+
+  if (selectedFiles.length === 0) { showErr('photo-error'); ok = false; }
+  else hideErr('photo-error');
+
+  return ok;
+}
+function showErr(id) { document.getElementById(id).classList.add('show'); }
+function hideErr(id) { document.getElementById(id).classList.remove('show'); }
+
+// Toast
+function showToast(msg, isErr=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isErr ? ' error-toast' : '');
+  setTimeout(() => t.className = 'toast' + (isErr?' error-toast':''), 3000);
+}
+
+// Confetti
+function launchConfetti() {
+  const colors = ['#AEEA00','#76FF03','#CCFF90','#FF6F00','#FFD740','#ffffff'];
+  for (let i = 0; i < 60; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.cssText = `left:${Math.random()*100}vw;background:${colors[~~(Math.random()*colors.length)]};animation-duration:${1.5+Math.random()*2.5}s;animation-delay:0s;transform:rotate(${Math.random()*360}deg)`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 4000);
+    }, i*30);
+  }
+}
+
+// SUBMIT
+document.getElementById('checkinForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!validate()) return;
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.classList.add('loading');
+
+  try {
+    // Convert images to base64
+    const images = await Promise.all(selectedFiles.map(f => toBase64(f)));
+
+    const payload = {
+      phone:    phoneEl.value.replace(/\D/g,''),
+      name:     document.getElementById('name').value.trim(),
+      social:   document.getElementById('social').value.trim(),
+      images:   images, // array of base64 strings
+      timestamp: new Date().toLocaleString('vi-VN', {timeZone:'Asia/Ho_Chi_Minh'}),
+      route:    document.referrer || 'Direct QR'
+    };
+
+    // Google Apps Script yêu cầu no-cors — không đọc được response body
+    // nên coi như thành công ngay sau khi fetch không throw
+    await fetch(SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload)
+    });
+
+    // Success!
+    launchConfetti();
+    setTimeout(() => {
+      document.getElementById('successScreen').classList.add('show');
+      // Countdown 3 → 2 → 1 rồi redirect đúng store
+      let cd = 5;
+      const cdEl = document.getElementById('cdNum');
+      if (cdEl) cdEl.textContent = cd;
+      const cdInterval = setInterval(() => {
+        cd--;
+        if (cdEl) cdEl.textContent = cd;
+        if (cd <= 0) clearInterval(cdInterval);
+      }, 1000);
+      startAppRedirect();
+    }, 400);
+
+    // Step 3 done
+    document.getElementById('step3c').className = 'step-circle done';
+    document.getElementById('step3c').textContent = '✓';
+
+  } catch (err) {
+    console.error(err);
+    showToast('⚠️ Có lỗi xảy ra. Vui lòng thử lại!', true);
+    btn.disabled = false;
+    btn.classList.remove('loading');
+  }
+});
+</script>
+</body>
+</html>
